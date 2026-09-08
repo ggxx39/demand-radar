@@ -1,27 +1,26 @@
 /**
  * Cloudflare Pages Function: /api/admin/llm-config
- * Securely manages and tests LLM configuration without exposing raw credentials.
+ * Securely manages and tests LLM configuration directly from the Admin UI.
  */
 
 export async function onRequestGet(context) {
   const { env } = context;
 
-  // Masked key for safety
-  const rawKey = env.AMD_API_KEY || env.OPENAI_API_KEY || 'rc-amd-configured';
-  const maskedKey = rawKey.length > 8 ? `${rawKey.slice(0, 5)}••••${rawKey.slice(-3)}` : '••••••••';
+  const rawKey = env.AMD_API_KEY || env.AMD_RADEON_API_KEY || env.OPENAI_API_KEY || '';
+  const maskedKey = rawKey.length > 8 ? `${rawKey.slice(0, 5)}••••${rawKey.slice(-3)}` : (rawKey ? '••••••••' : '');
 
   const config = {
     provider: env.LLM_PROVIDER || 'AMD Radeon (OpenCode Configured)',
     baseURL: env.LLM_BASE_URL || 'https://developer.amd.com.cn/radeon/api/v1',
     activeModel: env.LLM_MODEL || 'DeepSeek-V4-Flash',
     availableModels: [
-      { id: 'DeepSeek-V4-Flash', name: 'DeepSeek V4 Flash (Fastest, Schema Compliant)', provider: 'amd-radeon' },
-      { id: 'Qwen3.8-Flash-Next', name: 'Qwen 3.8 Flash Next (High Reasoning Depth)', provider: 'amd-radeon' },
-      { id: 'MiniCPM5-1B', name: 'MiniCPM 5 (Edge Lightweight)', provider: 'amd-radeon' }
+      { id: 'DeepSeek-V4-Flash', name: 'DeepSeek V4 Flash (极速、严格 JSON 格式)', provider: 'amd-radeon' },
+      { id: 'Qwen3.8-Flash-Next', name: 'Qwen 3.8 Flash Next (具备深度推理思考链)', provider: 'amd-radeon' },
+      { id: 'MiniCPM5-1B', name: 'MiniCPM 5 (超轻量级边缘模型)', provider: 'amd-radeon' }
     ],
     temperature: parseFloat(env.LLM_TEMPERATURE || '0.2'),
     maskedKey,
-    isKeyConfigured: true,
+    isKeyConfigured: Boolean(rawKey),
     lastTested: new Date().toISOString()
   };
 
@@ -39,8 +38,18 @@ export async function onRequestPost(context) {
 
     if (action === 'test_connection') {
       const targetModel = body.model || env.LLM_MODEL || 'DeepSeek-V4-Flash';
-      const baseURL = env.LLM_BASE_URL || 'https://developer.amd.com.cn/radeon/api/v1';
-      const apiKey = env.AMD_API_KEY || env.OPENAI_API_KEY || 'rc-amd-radeon-key';
+      const baseURL = (body.baseURL || env.LLM_BASE_URL || 'https://developer.amd.com.cn/radeon/api/v1').trim();
+      const apiKey = (body.apiKey || env.AMD_API_KEY || env.AMD_RADEON_API_KEY || env.OPENAI_API_KEY || '').trim();
+
+      if (!apiKey) {
+        return new Response(JSON.stringify({
+          success: false,
+          error: '请在页面输入 API Key，或在 Cloudflare 环境变量中配置 AMD_API_KEY。'
+        }), {
+          status: 400,
+          headers: { 'Content-Type': 'application/json' }
+        });
+      }
 
       const startTime = Date.now();
       const testRes = await fetch(`${baseURL.replace(/\/$/, '')}/chat/completions`, {
@@ -62,7 +71,7 @@ export async function onRequestPost(context) {
         const errText = await testRes.text();
         return new Response(JSON.stringify({
           success: false,
-          error: `Endpoint returned HTTP ${testRes.status}: ${errText}`,
+          error: `上游服务返回 HTTP ${testRes.status}: ${errText}`,
           latencyMs
         }), {
           status: 400,
@@ -75,7 +84,7 @@ export async function onRequestPost(context) {
 
       return new Response(JSON.stringify({
         success: true,
-        message: 'LLM connection verified successfully.',
+        message: '模型连通测试成功！API Key 认证通过。',
         model: targetModel,
         reply,
         latencyMs
@@ -86,7 +95,7 @@ export async function onRequestPost(context) {
 
     return new Response(JSON.stringify({
       success: true,
-      message: 'Configuration updated in runtime context.'
+      message: '配置已更新'
     }), {
       headers: { 'Content-Type': 'application/json' }
     });

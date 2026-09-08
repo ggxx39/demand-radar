@@ -58,36 +58,25 @@
           <p class="content-subtitle">管理用于痛点抽取和 8 维对抗性商业打分的大模型后端与 API 端点配置。</p>
         </div>
 
-        <div class="section-label">当前运行供应商</div>
+        <div class="section-label">推理端点与凭据配置 (支持直接在页面编辑)</div>
         <div class="inset-card">
-          <div class="inset-row">
-            <div class="inset-row-info">
-              <span class="inset-row-title">推理引擎</span>
-              <span class="inset-row-desc">用于自动化结构化抽取与分析的上游接口</span>
-            </div>
-            <span class="status-pill success">
-              <span class="status-dot"></span>
-              <span id="label-provider">AMD Radeon (OpenCode 本机配置)</span>
-            </span>
-          </div>
           <div class="inset-row">
             <div class="inset-row-info">
               <span class="inset-row-title">服务基准地址 (Base URL)</span>
-              <span class="inset-row-desc" id="label-baseurl">https://developer.amd.com.cn/radeon/api/v1</span>
+              <span class="inset-row-desc">兼容 OpenAI 规范的上游推理接口地址</span>
             </div>
-            <span class="status-pill" style="font-family:var(--font-mono); font-size:11px;">HTTPS 已验证</span>
+            <input type="text" id="input-baseurl" class="apple-input" style="width:340px;" value="https://developer.amd.com.cn/radeon/api/v1">
           </div>
           <div class="inset-row">
             <div class="inset-row-info">
-              <span class="inset-row-title">API 凭据安全存储</span>
-              <span class="inset-row-desc">凭据已在 Cloudflare 边缘端加密脱敏，绝不对外暴露明文</span>
+              <span class="inset-row-title">API 密钥 (API Key)</span>
+              <span class="inset-row-desc">直接在此处输入或粘贴你的密钥（保存在当前管理员会话中）</span>
             </div>
-            <span class="status-pill success" id="label-key-status">凭据正常 (rc-am••••)</span>
+            <div style="display:flex; gap:8px; align-items:center;">
+              <input type="password" id="input-apikey" class="apple-input" style="width:280px;" placeholder="粘贴 API Key (如 rc-...)">
+              <button id="btn-toggle-key" class="apple-btn" style="padding:6px 10px;" type="button" title="显示/隐藏明文">👁️</button>
+            </div>
           </div>
-        </div>
-
-        <div class="section-label">推理模型选择</div>
-        <div class="inset-card">
           <div class="inset-row">
             <div class="inset-row-info">
               <span class="inset-row-title">核心评估模型</span>
@@ -101,12 +90,17 @@
           </div>
           <div class="inset-row">
             <div class="inset-row-info">
-              <span class="inset-row-title">实时连通性测试</span>
-              <span class="inset-row-desc">向指定大模型发送探针，测量边缘端到上游模型的往返延迟</span>
+              <span class="inset-row-title">操作与连通性验证</span>
+              <span class="inset-row-desc">保存当前配置，并向上游模型发送探针测量往返延迟</span>
             </div>
-            <button id="btn-test-llm" class="apple-btn primary">
-              <span>⚡</span> Ping 测试模型
-            </button>
+            <div style="display:flex; gap:10px;">
+              <button id="btn-save-llm" class="apple-btn" type="button">
+                <span>💾</span> 保存配置
+              </button>
+              <button id="btn-test-llm" class="apple-btn primary" type="button">
+                <span>⚡</span> Ping 测试模型
+              </button>
+            </div>
           </div>
         </div>
 

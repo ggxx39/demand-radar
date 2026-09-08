@@ -19,13 +19,49 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   });
 
-  // 2. 读取大模型配置
-  const providerLabel = document.getElementById('label-provider');
-  const baseURLlabel = document.getElementById('label-baseurl');
-  const keyStatusLabel = document.getElementById('label-key-status');
+  // 2. 读取与页面配置大模型参数
+  const inputBaseURL = document.getElementById('input-baseurl');
+  const inputApiKey = document.getElementById('input-apikey');
+  const btnToggleKey = document.getElementById('btn-toggle-key');
+  const btnSaveLLM = document.getElementById('btn-save-llm');
   const selectActiveModel = document.getElementById('select-active-model');
   const btnTestLLM = document.getElementById('btn-test-llm');
   const llmTestResult = document.getElementById('llm-test-result');
+
+  // 从本地 localStorage 加载保存的密钥与 Base URL
+  const savedKey = localStorage.getItem('dr_api_key') || '';
+  const savedBaseURL = localStorage.getItem('dr_base_url') || '';
+  const savedModel = localStorage.getItem('dr_model') || '';
+
+  if (savedKey && inputApiKey) inputApiKey.value = savedKey;
+  if (savedBaseURL && inputBaseURL) inputBaseURL.value = savedBaseURL;
+  if (savedModel && selectActiveModel) selectActiveModel.value = savedModel;
+
+  // 明文切换
+  if (btnToggleKey && inputApiKey) {
+    btnToggleKey.addEventListener('click', () => {
+      inputApiKey.type = inputApiKey.type === 'password' ? 'text' : 'password';
+      btnToggleKey.textContent = inputApiKey.type === 'password' ? '👁️' : '🔒';
+    });
+  }
+
+  // 保存设置到当前浏览器
+  if (btnSaveLLM) {
+    btnSaveLLM.addEventListener('click', () => {
+      const k = inputApiKey ? inputApiKey.value.trim() : '';
+      const b = inputBaseURL ? inputBaseURL.value.trim() : '';
+      const m = selectActiveModel ? selectActiveModel.value : '';
+
+      localStorage.setItem('dr_api_key', k);
+      localStorage.setItem('dr_base_url', b);
+      localStorage.setItem('dr_model', m);
+
+      btnSaveLLM.innerHTML = '<span>✔</span> 已保存';
+      setTimeout(() => {
+        btnSaveLLM.innerHTML = '<span>💾</span> 保存配置';
+      }, 2000);
+    });
+  }
 
   async function loadLLMConfig() {
     try {
@@ -34,36 +70,35 @@ document.addEventListener('DOMContentLoaded', () => {
       const data = await res.json();
       if (data.success && data.config) {
         const c = data.config;
-        if (providerLabel) providerLabel.textContent = c.provider;
-        if (baseURLlabel) baseURLlabel.textContent = c.baseURL;
-        if (keyStatusLabel) keyStatusLabel.textContent = `凭据正常 (${c.maskedKey})`;
-        if (selectActiveModel && c.activeModel) {
-          selectActiveModel.value = c.activeModel;
-        }
+        if (inputBaseURL && !savedBaseURL && c.baseURL) inputBaseURL.value = c.baseURL;
+        if (selectActiveModel && !savedModel && c.activeModel) selectActiveModel.value = c.activeModel;
       }
     } catch (err) {
-      console.warn('无法读取远程 LLM 配置，采用默认配置:', err.message);
+      console.warn('无法读取远程 LLM 配置，采用本地配置:', err.message);
     }
   }
 
   loadLLMConfig();
 
-  // 3. Ping 探针测试大模型连通性
+  // 3. Ping 探针测试大模型连通性 (优先使用页面输入的 API Key)
   if (btnTestLLM) {
     btnTestLLM.addEventListener('click', async () => {
       const model = selectActiveModel ? selectActiveModel.value : 'DeepSeek-V4-Flash';
+      const apiKey = inputApiKey ? inputApiKey.value.trim() : '';
+      const baseURL = inputBaseURL ? inputBaseURL.value.trim() : '';
+
       btnTestLLM.disabled = true;
       btnTestLLM.innerHTML = '<span>⏳</span> 正在测试...';
       if (llmTestResult) {
         llmTestResult.style.display = 'block';
-        llmTestResult.textContent = `正在向上游 AMD Radeon API (${model}) 发起探针请求...\n等待模型返回...`;
+        llmTestResult.textContent = `正在向上游模型 API (${model} via ${baseURL || 'default'})...\n等待模型返回...`;
       }
 
       try {
         const res = await fetch('/api/admin/llm-config', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ action: 'test_connection', model })
+          body: JSON.stringify({ action: 'test_connection', model, apiKey, baseURL })
         });
         const result = await res.json();
         btnTestLLM.disabled = false;
@@ -117,7 +152,9 @@ document.addEventListener('DOMContentLoaded', () => {
             source,
             sub,
             limit: parseInt(limit, 10),
-            model: selectActiveModel ? selectActiveModel.value : 'DeepSeek-V4-Flash'
+            model: selectActiveModel ? selectActiveModel.value : 'DeepSeek-V4-Flash',
+            apiKey: (inputApiKey ? inputApiKey.value.trim() : '') || localStorage.getItem('dr_api_key') || '',
+            baseURL: (inputBaseURL ? inputBaseURL.value.trim() : '') || localStorage.getItem('dr_base_url') || ''
           })
         });
 

@@ -23,12 +23,12 @@ export async function onRequestPost(context) {
     addLog(`Scan depth target: ${limit} live discussions`);
 
     // Resolve LLM config if available
-    const apiKey = clientKey || context.env?.AMD_RADEON_API_KEY || context.env?.OPENAI_API_KEY;
-    const isAmd = !clientKey && Boolean(context.env?.AMD_RADEON_API_KEY) || (clientKey && clientKey.startsWith('rc-'));
-    const baseURL = isAmd ? 'https://developer.amd.com.cn/radeon/api/v1' : 'https://api.openai.com/v1';
+    const apiKey = (clientKey || context.env?.AMD_API_KEY || context.env?.AMD_RADEON_API_KEY || context.env?.OPENAI_API_KEY || '').trim();
+    const isAmd = (clientKey && clientKey.startsWith('rc-')) || Boolean(context.env?.AMD_API_KEY) || Boolean(context.env?.AMD_RADEON_API_KEY);
+    const baseURL = (body.baseURL || (isAmd ? 'https://developer.amd.com.cn/radeon/api/v1' : 'https://api.openai.com/v1')).trim();
 
     if (apiKey) {
-      addLog(`LLM Provider active: ${isAmd ? 'AMD Radeon API' : 'OpenAI'} (${clientModel})`);
+      addLog(`LLM Provider active: ${isAmd ? 'AMD Radeon API' : 'OpenAI'} (${clientModel}) via ${baseURL}`);
     } else {
       addLog(`No external LLM key provided. Activating built-in heuristic demand classifier.`);
     }
