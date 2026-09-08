@@ -1,0 +1,69 @@
+{
+  "id": "opp-20260908-ci-docker-cache-r2",
+  "cluster_id": "cluster-2026-ci-docker-cache",
+  "title": "Zero-Config Cloudflare R2 Docker Layer Cache for GitHub Actions",
+  "one_liner": "A drop-in GitHub Action that streams Docker Buildx layer cache to affordable S3/R2 storage, slashing CI build times by 75% for small engineering teams.",
+  "evaluated_at": "2026-09-08T10:00:00Z",
+  "evaluator": "hybrid",
+  "dimensions": {
+    "pain_intensity": {
+      "score": 8,
+      "weight": 0.15,
+      "evidence": "Causes 20+ minute developer blocking delays multiple times daily and inflates monthly GitHub Actions compute bills by $300+.",
+      "rubric_tier": "strong_7_8"
+    },
+    "frequency": {
+      "score": 9,
+      "weight": 0.08,
+      "evidence": "Triggered on nearly every git push or rebase across feature branches in active engineering teams.",
+      "rubric_tier": "exceptional_9_10"
+    },
+    "workaround_friction": {
+      "score": 8,
+      "weight": 0.15,
+      "evidence": "Teams currently write custom 100-line bash scripts pushing to AWS ECR, incurring high egress fees and fragility.",
+      "rubric_tier": "strong_7_8"
+    },
+    "paying_intent": {
+      "score": 8,
+      "weight": 0.20,
+      "evidence": "Devs explicitly state willingness to pay $30-$49/month flat pricing to avoid $50/developer/month Depot enterprise lock-in.",
+      "rubric_tier": "strong_7_8"
+    },
+    "cross_source_recurrence": {
+      "score": 7,
+      "weight": 0.07,
+      "evidence": "Repeated complaints found across Reddit r/devops, Hacker News Ask HN threads, and multiple GitHub Actions issues.",
+      "rubric_tier": "strong_7_8"
+    },
+    "competitive_gap": {
+      "score": 8,
+      "weight": 0.10,
+      "evidence": "Depot.dev is enterprise-focused and expensive ($50/dev); native GitHub cache is capped at 10GB with aggressive LRU eviction. No lightweight BYO-S3 Action exists.",
+      "rubric_tier": "strong_7_8"
+    },
+    "feasibility_solo_buildability": {
+      "score": 9,
+      "weight": 0.10,
+      "evidence": "A solo developer can write the composite GitHub Action + Go/Rust CLI backing up to S3/R2 in under 10 days.",
+      "rubric_tier": "exceptional_9_10"
+    },
+    "distribution_accessibility": {
+      "score": 9,
+      "weight": 0.15,
+      "evidence": "Immediate organic distribution via GitHub Marketplace, r/devops, Hacker News 'Show HN', and SEO for 'github actions docker cache r2'.",
+      "rubric_tier": "exceptional_9_10"
+    }
+  },
+  "total_weighted_score": 82.6,
+  "hard_kill_filters": {
+    "pain_intensity_below_6": false,
+    "paying_intent_below_5": false,
+    "unsolvable_for_solo_builder": false,
+    "zero_distribution_channel": false,
+    "is_killed": false,
+    "kill_reason": null
+  },
+  "recommendation": "pursue_immediately",
+  "next_action": "Publish a GitHub README smoke test repo, reach out to 5 thread authors on Reddit for Mom Test interviews, and set up a pre-order waiting list."
+}

@@ -1,0 +1,56 @@
+{
+  "id": "pain-20260908-ci-docker-cache-invalidation",
+  "created_at": "2026-09-08T08:30:00Z",
+  "headline": "GitHub Actions Docker Buildx cache randomly busts across feature branches, causing 25-minute build delays and CI bill shocks",
+  "target_audience": {
+    "role": "Fullstack Software Engineer / Tech Lead",
+    "domain": "Developer Tools & Cloud Infrastructure",
+    "experience_or_scale": "Fast-moving startup team of 6 engineers shipping 20+ PRs daily"
+  },
+  "scenario": "Opening pull requests with minor front-end or dependency changes in a monorepo",
+  "friction": "GitHub Actions built-in cache (`type=gha`) hits its 10GB shared repository limit and evicts heavy Docker layers without notice. Build times jump from 90 seconds to 26 minutes unpredictably, blocking deployment merges and developer flow.",
+  "current_workaround": {
+    "method": "Developers manually re-run failed or slow jobs; infra engineer wrote a 90-line YAML job pushing inline cache to a private AWS ECR registry with custom secret handling.",
+    "tools_used": [
+      "GitHub Actions",
+      "docker/build-push-action",
+      "AWS ECR",
+      "custom bash"
+    ],
+    "drawbacks": "ECR network egress fees spiked by $180/mo, engineers frequently bypass CI locally, and branch cache misses still occur constantly on git rebase."
+  },
+  "cost_or_loss": {
+    "summary": "Approximately 22 hours of blocked developer waiting time per engineer/month, plus $320 in excess GitHub Actions billable compute minutes.",
+    "time_lost_hours_per_month": 45.0,
+    "financial_loss_usd_per_month": 320.0,
+    "emotional_toll": "regular_frustration"
+  },
+  "sentiment_intensity": "high",
+  "paying_intent_clues": {
+    "has_explicit_buying_statement": true,
+    "existing_spend_on_workaround": true,
+    "stated_budget_range": "$29-$49/month flat team pricing",
+    "evidence_snippets": [
+      "I looked at Depot.dev but they want $50/developer/month which is insane for our 8-person team. Give me a simple GitHub Action that streams layer tarballs to our own Cloudflare R2 bucket for $30/mo and take my money."
+    ]
+  },
+  "source_url": "https://reddit.com/r/devops/comments/1example/gha_docker_cache_eviction",
+  "channel": "reddit",
+  "channel_metadata": {
+    "community": "r/devops",
+    "author": "u/cloud_builder_mike",
+    "upvotes_or_likes": 128,
+    "comment_count": 56,
+    "post_date": "2026-09-06"
+  },
+  "raw_quote": "Every time our team branches from main, GitHub Actions wipes the Buildx cache. What should be a 2-minute lint & unit test becomes a 24-minute full Docker layer compilation. Depot is way too expensive for our stage. I would gladly pay $30-$40/month for a lightweight Action that syncs cache directly to S3 or R2 without changing our runner architecture.",
+  "confidence": 0.96,
+  "tags": [
+    "docker",
+    "github-actions",
+    "ci-cd",
+    "developer-tools",
+    "cache-optimization"
+  ],
+  "cluster_id": "cluster-2026-ci-docker-cache"
+}

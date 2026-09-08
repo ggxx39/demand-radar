@@ -1,0 +1,206 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://raw.githubusercontent.com/ggxx39/demand-radar/main/schemas/pain-card.schema.json",
+  "title": "PainCard",
+  "description": "Standardized schema for atomic pain point cards extracted from organic developer and user conversations (Reddit, HN, X, GitHub, App Store, Discord).",
+  "type": "object",
+  "required": [
+    "id",
+    "created_at",
+    "headline",
+    "target_audience",
+    "scenario",
+    "friction",
+    "current_workaround",
+    "cost_or_loss",
+    "sentiment_intensity",
+    "paying_intent_clues",
+    "source_url",
+    "channel",
+    "raw_quote",
+    "confidence"
+  ],
+  "properties": {
+    "id": {
+      "type": "string",
+      "description": "Globally unique identifier for the pain card. Recommended format: pain-YYYYMMDD-<slug>.",
+      "pattern": "^pain-[0-9]{8}-[a-z0-9-]+$"
+    },
+    "created_at": {
+      "type": "string",
+      "format": "date-time",
+      "description": "ISO 8601 timestamp when this card was extracted or recorded."
+    },
+    "headline": {
+      "type": "string",
+      "description": "One-line punchy summary of the specific pain point (under 100 characters).",
+      "maxLength": 120
+    },
+    "target_audience": {
+      "type": "object",
+      "description": "Detailed profile of who suffers from this pain point.",
+      "required": ["role", "domain", "experience_or_scale"],
+      "properties": {
+        "role": {
+          "type": "string",
+          "description": "Specific job title, persona, or identity (e.g. Solo SaaS Founder, Junior DevOps Engineer, Shopify Merchant)."
+        },
+        "domain": {
+          "type": "string",
+          "description": "Industry or functional vertical (e.g. Developer Tools, E-commerce, B2B Sales, Creative / Design)."
+        },
+        "experience_or_scale": {
+          "type": "string",
+          "description": "Scale indicator (e.g. 1-5 person team, $10k-50k MRR, hobbyist, high-volume production)."
+        }
+      },
+      "additionalProperties": false
+    },
+    "scenario": {
+      "type": "string",
+      "description": "The exact context, workflow step, or trigger event where the user encounters the friction."
+    },
+    "friction": {
+      "type": "string",
+      "description": "The specific breakdown, failure, bottleneck, or obstruction preventing the user from completing their objective."
+    },
+    "current_workaround": {
+      "type": "object",
+      "description": "How the user currently hacks around the problem in the absence of a dedicated solution.",
+      "required": ["method", "tools_used", "drawbacks"],
+      "properties": {
+        "method": {
+          "type": "string",
+          "description": "Description of the manual workaround, DIY script, or operational duct tape."
+        },
+        "tools_used": {
+          "type": "array",
+          "description": "List of existing tools stitched together to cope with the problem.",
+          "items": { "type": "string" }
+        },
+        "drawbacks": {
+          "type": "string",
+          "description": "Why this workaround is inadequate, fragile, tedious, or dangerous."
+        }
+      },
+      "additionalProperties": false
+    },
+    "cost_or_loss": {
+      "type": "object",
+      "description": "Quantified or qualitative estimate of what the pain costs the user or business.",
+      "required": ["summary", "time_lost_hours_per_month", "emotional_toll"],
+      "properties": {
+        "summary": {
+          "type": "string",
+          "description": "Concise summary of total financial, operational, or emotional damage."
+        },
+        "time_lost_hours_per_month": {
+          "type": "number",
+          "minimum": 0,
+          "description": "Estimated hours wasted every month dealing with this pain."
+        },
+        "financial_loss_usd_per_month": {
+          "type": ["number", "null"],
+          "minimum": 0,
+          "description": "Direct financial cost, wasted ad spend, cloud bill spike, or contractor fee."
+        },
+        "emotional_toll": {
+          "type": "string",
+          "enum": ["mild_annoyance", "regular_frustration", "acute_anxiety_or_rage", "burnout_risk"],
+          "description": "Emotional severity reported or inferred from user language."
+        }
+      },
+      "additionalProperties": false
+    },
+    "sentiment_intensity": {
+      "type": "string",
+      "enum": ["low", "moderate", "high", "critical"],
+      "description": "Aggregate level of urgency and desperation expressed by the user."
+    },
+    "paying_intent_clues": {
+      "type": "object",
+      "description": "Concrete signals that the user or their organization would pay to eradicate this pain.",
+      "required": [
+        "has_explicit_buying_statement",
+        "existing_spend_on_workaround",
+        "evidence_snippets"
+      ],
+      "properties": {
+        "has_explicit_buying_statement": {
+          "type": "boolean",
+          "description": "True if user stated things like 'I would pay $X', 'Shut up and take my money', 'Looking for a paid tool'."
+        },
+        "existing_spend_on_workaround": {
+          "type": "boolean",
+          "description": "True if user already pays for human freelancers, Zapier runs, or clunky enterprise software to patch this."
+        },
+        "stated_budget_range": {
+          "type": ["string", "null"],
+          "description": "Reported willingness to pay (e.g. '$20-$50/month', '$500 one-time', 'seat-based enterprise budget')."
+        },
+        "evidence_snippets": {
+          "type": "array",
+          "items": { "type": "string" },
+          "description": "Direct quote segments demonstrating willingness to pay or acute economic loss."
+        }
+      },
+      "additionalProperties": false
+    },
+    "source_url": {
+      "type": "string",
+      "format": "uri",
+      "description": "Direct canonical link to the public post, thread, review, or issue."
+    },
+    "channel": {
+      "type": "string",
+      "enum": [
+        "reddit",
+        "hackernews",
+        "x_twitter",
+        "github_issues",
+        "discord",
+        "app_store",
+        "play_store",
+        "trustpilot",
+        "g2",
+        "v2ex",
+        "producthunt",
+        "discourse_forum",
+        "other"
+      ],
+      "description": "Platform or origin channel where this signal was harvested."
+    },
+    "channel_metadata": {
+      "type": "object",
+      "description": "Source-specific metadata (e.g., subreddit, upvotes, thread author, engagement).",
+      "properties": {
+        "community": { "type": "string" },
+        "author": { "type": "string" },
+        "upvotes_or_likes": { "type": "integer", "minimum": 0 },
+        "comment_count": { "type": "integer", "minimum": 0 },
+        "post_date": { "type": "string" }
+      },
+      "additionalProperties": true
+    },
+    "raw_quote": {
+      "type": "string",
+      "description": "Verbatim quote of the user's original words with no rewriting or AI embellishment."
+    },
+    "confidence": {
+      "type": "number",
+      "minimum": 0.0,
+      "maximum": 1.0,
+      "description": "Confidence score (0.0 to 1.0) assessing extraction accuracy and authenticity (filters out stealth spam/marketing)."
+    },
+    "tags": {
+      "type": "array",
+      "items": { "type": "string" },
+      "description": "Keywords for indexing, search, and clustering."
+    },
+    "cluster_id": {
+      "type": ["string", "null"],
+      "description": "Identifier of the clustered opportunity group this pain card belongs to."
+    }
+  },
+  "additionalProperties": false
+}

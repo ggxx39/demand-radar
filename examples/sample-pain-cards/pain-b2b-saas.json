@@ -1,0 +1,57 @@
+{
+  "id": "pain-20260908-b2b-tenant-migration-drift",
+  "created_at": "2026-09-08T09:15:00Z",
+  "headline": "Postgres schema migration drift across 50+ isolated tenant databases causing silent API 500 errors",
+  "target_audience": {
+    "role": "Lead Backend Engineer / CTO",
+    "domain": "B2B Multi-Tenant SaaS",
+    "experience_or_scale": "Series A startup, 45 isolated client databases, $40k MRR"
+  },
+  "scenario": "Deploying zero-downtime database migrations on Tuesday release windows",
+  "friction": "Prisma and standard migration tools assume a single database. Running migrations across 50 separate PostgreSQL tenant instances in a sequential bash script randomly fails on tenant #28 due to lock timeouts, leaving half the fleet on v2.1 and half on v2.2 with broken API routing.",
+  "current_workaround": {
+    "method": "A custom 250-line Python script that loops over database connection strings with retry loops, monitored manually in tmux during midnight deployments.",
+    "tools_used": [
+      "Python psycopg2",
+      "tmux",
+      "Prisma CLI",
+      "Slack webhooks"
+    ],
+    "drawbacks": "Requires 2 engineers awake until 1 AM, high anxiety of silent table lock deadlocks, zero rollback safety if migration fails midway."
+  },
+  "cost_or_loss": {
+    "summary": "16 hours of senior engineering time lost per month in stressful deployment babysitting, plus 1 major client SLA outage incident ($1,200 refund).",
+    "time_lost_hours_per_month": 16.0,
+    "financial_loss_usd_per_month": 1200.0,
+    "emotional_toll": "acute_anxiety_or_rage"
+  },
+  "sentiment_intensity": "critical",
+  "paying_intent_clues": {
+    "has_explicit_buying_statement": true,
+    "existing_spend_on_workaround": true,
+    "stated_budget_range": "$100-$300/month",
+    "evidence_snippets": [
+      "We already pay $400/month to AWS RDS just for IOPS bursts during migrations. I would gladly swipe our corporate card for $200/month tomorrow for an orchestrator that safely runs concurrent tenant migrations with canary health checks."
+    ]
+  },
+  "source_url": "https://news.ycombinator.com/item?id=41489201",
+  "channel": "hackernews",
+  "channel_metadata": {
+    "community": "Ask HN",
+    "author": "saas_cto_anon",
+    "upvotes_or_likes": 84,
+    "comment_count": 42,
+    "post_date": "2026-09-07"
+  },
+  "raw_quote": "Our database migration script failed on tenant 31 out of 48 at midnight because of an exclusive lock timeout. Half our enterprise clients started throwing 500s the next morning. Prisma has no native multi-tenant concurrency runner. We spent 6 hours manually inspecting schema diffs. We would pay $200/mo without blinking for a rock-solid CLI that handles tenant canary migrations.",
+  "confidence": 0.98,
+  "tags": [
+    "b2b-saas",
+    "postgresql",
+    "prisma",
+    "database-migrations",
+    "multi-tenant",
+    "devops"
+  ],
+  "cluster_id": "cluster-2026-multitenant-db-ops"
+}

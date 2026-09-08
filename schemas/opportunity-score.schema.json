@@ -1,0 +1,182 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://raw.githubusercontent.com/ggxx39/demand-radar/main/schemas/opportunity-score.schema.json",
+  "title": "OpportunityScore",
+  "description": "Standardized 8-dimensional opportunity scoring schema for indie hackers and solo founders, featuring weighted rubric calculation and fatal kill-criteria gates.",
+  "type": "object",
+  "required": [
+    "id",
+    "cluster_id",
+    "title",
+    "one_liner",
+    "evaluated_at",
+    "evaluator",
+    "dimensions",
+    "total_weighted_score",
+    "hard_kill_filters",
+    "recommendation",
+    "next_action"
+  ],
+  "properties": {
+    "id": {
+      "type": "string",
+      "description": "Unique identifier for this opportunity evaluation (e.g. opp-20260908-docker-cache-guardian).",
+      "pattern": "^opp-[0-9]{8}-[a-z0-9-]+$"
+    },
+    "cluster_id": {
+      "type": "string",
+      "description": "Reference ID to the clustered group of pain cards."
+    },
+    "title": {
+      "type": "string",
+      "description": "Descriptive opportunity title (e.g., 'Automated GitHub Actions Docker Cache Optimizer')."
+    },
+    "one_liner": {
+      "type": "string",
+      "description": "One sentence value proposition defining who, what pain, and the proposed lightweight wedge."
+    },
+    "evaluated_at": {
+      "type": "string",
+      "format": "date-time",
+      "description": "Timestamp of evaluation."
+    },
+    "evaluator": {
+      "type": "string",
+      "enum": ["llm", "human", "hybrid"],
+      "description": "Mode of assessment: automated LLM evaluation, manual human founder review, or hybrid."
+    },
+    "dimensions": {
+      "type": "object",
+      "description": "The 8 quantitative dimensions evaluated from 1 to 10 with evidentiary rationale.",
+      "required": [
+        "pain_intensity",
+        "frequency",
+        "workaround_friction",
+        "paying_intent",
+        "cross_source_recurrence",
+        "competitive_gap",
+        "feasibility_solo_buildability",
+        "distribution_accessibility"
+      ],
+      "properties": {
+        "pain_intensity": {
+          "$ref": "#/$defs/dimensionDetail",
+          "description": "1-10: Severity of problem (1=trivial annoyance, 10=hair-on-fire blocker causing immediate loss)."
+        },
+        "frequency": {
+          "$ref": "#/$defs/dimensionDetail",
+          "description": "1-10: How often the pain occurs (1=once a year, 10=multiple times daily)."
+        },
+        "workaround_friction": {
+          "$ref": "#/$defs/dimensionDetail",
+          "description": "1-10: Inefficiency and fragility of current solutions (1=Google Docs suffices, 10=brittle 500-line shell script + 3 SaaS hacks)."
+        },
+        "paying_intent": {
+          "$ref": "#/$defs/dimensionDetail",
+          "description": "1-10: Evidence of willingness or ability to pay (1=pure free-tier seekers, 10=active budget, paid alternatives, hiring contractors)."
+        },
+        "cross_source_recurrence": {
+          "$ref": "#/$defs/dimensionDetail",
+          "description": "1-10: Volume and multi-platform validation (1=isolated complaint, 10=repeated organic uproar across Reddit, HN, X, Discord)."
+        },
+        "competitive_gap": {
+          "$ref": "#/$defs/dimensionDetail",
+          "description": "1-10: Whitespace in existing market (1=dominated by free/cheap giants, 10=incumbents are bloated, expensive, or neglect this exact workflow)."
+        },
+        "feasibility_solo_buildability": {
+          "$ref": "#/$defs/dimensionDetail",
+          "description": "1-10: Can 1 developer build an MVP in 1-3 weeks? (1=requires 5-year R&D / deep enterprise sales, 10=laser-focused tool shippable in 10 days)."
+        },
+        "distribution_accessibility": {
+          "$ref": "#/$defs/dimensionDetail",
+          "description": "1-10: How easily can the target users be reached? (1=opaque buyers behind procurement walls, 10=concentrated subreddits, GitHub issues, high intent search)."
+        }
+      },
+      "additionalProperties": false
+    },
+    "total_weighted_score": {
+      "type": "number",
+      "minimum": 0,
+      "maximum": 100,
+      "description": "Calculated score from 0 to 100 based on dimension weights."
+    },
+    "hard_kill_filters": {
+      "type": "object",
+      "description": "Predefined fatal filters. If any trigger, the opportunity must NOT proceed directly to building.",
+      "required": [
+        "pain_intensity_below_6",
+        "paying_intent_below_5",
+        "unsolvable_for_solo_builder",
+        "zero_distribution_channel",
+        "is_killed"
+      ],
+      "properties": {
+        "pain_intensity_below_6": {
+          "type": "boolean",
+          "description": "True if pain_intensity < 6 (Vitamin, not painkiller)."
+        },
+        "paying_intent_below_5": {
+          "type": "boolean",
+          "description": "True if paying_intent < 5 (Complaint sink without commercial conversion)."
+        },
+        "unsolvable_for_solo_builder": {
+          "type": "boolean",
+          "description": "True if feasibility < 4 (Exceeds solo indie execution capacity)."
+        },
+        "zero_distribution_channel": {
+          "type": "boolean",
+          "description": "True if distribution < 4 (No repeatable, low-cost way to reach buyers)."
+        },
+        "is_killed": {
+          "type": "boolean",
+          "description": "True if any lethal trigger is activated."
+        },
+        "kill_reason": {
+          "type": ["string", "null"],
+          "description": "Explicit post-mortem reason explaining why this opportunity was disqualified."
+        }
+      },
+      "additionalProperties": false
+    },
+    "recommendation": {
+      "type": "string",
+      "enum": ["pursue_immediately", "deepen_investigation", "archive_or_monitor", "kill"],
+      "description": "Strategic directive: pursue MVP smoke test, do more user interviews, monitor, or drop."
+    },
+    "next_action": {
+      "type": "string",
+      "description": "The exact next tactical step (e.g. 'Run 5 Mom Test interviews with authors of cards #1, #3', 'Setup landing page smoke test')."
+    }
+  },
+  "$defs": {
+    "dimensionDetail": {
+      "type": "object",
+      "required": ["score", "weight", "evidence", "rubric_tier"],
+      "properties": {
+        "score": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 10,
+          "description": "Score assigned between 1 and 10."
+        },
+        "weight": {
+          "type": "number",
+          "minimum": 0.0,
+          "maximum": 1.0,
+          "description": "Normalized weight of this dimension."
+        },
+        "evidence": {
+          "type": "string",
+          "description": "Concrete fact-based justification citing source cards or market realities."
+        },
+        "rubric_tier": {
+          "type": "string",
+          "enum": ["low_1_3", "moderate_4_6", "strong_7_8", "exceptional_9_10"],
+          "description": "Categorical tier based on the standardized scoring rubric."
+        }
+      },
+      "additionalProperties": false
+    }
+  },
+  "additionalProperties": false
+}

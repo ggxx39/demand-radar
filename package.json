@@ -1,0 +1,21 @@
+{
+  "name": "demand-radar",
+  "version": "1.0.0",
+  "description": "Open-source customer demand intelligence & opportunity scoring system for indie developers and solo founders.",
+  "main": "scripts/validate.js",
+  "scripts": {
+    "test": "node scripts/validate.js",
+    "validate": "node scripts/validate.js"
+  },
+  "keywords": [
+    "indie-hacker",
+    "startup-validation",
+    "market-research",
+    "pain-point-mining",
+    "opportunity-score",
+    "the-mom-test",
+    "demand-radar"
+  ],
+  "author": "ggxx39",
+  "license": "MIT"
+}

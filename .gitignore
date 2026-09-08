@@ -1,0 +1,48 @@
+# OS Metadata
+.DS_Store
+.AppleDouble
+.LSOverride
+Icon
+._*
+Thumbs.db
+
+# Node / JS
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+env/
+venv/
+.venv/
+
+# Local database & cache
+*.sqlite
+*.sqlite3
+*.db
+*.db-journal
+*.log
+
+# Sensitive configs & runtime data
+.env
+.env.*
+!.env.example
+data/raw/
+data/cache/
+output/
+
+# IDE & Editor files
+.vscode/
+.idea/
+.cursor/
+*.swp
+*.swo
+
+# Obsidian workspace cache
+.obsidian/workspace*
