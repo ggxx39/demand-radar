@@ -1,10 +1,9 @@
 /**
- * Demand Radar // Admin Control Center Script
- * macOS Style Settings Interactivity & API Communications
+ * Demand Radar // 后台控制中心应用脚本 (macOS 风格中文交互)
  */
 
 document.addEventListener('DOMContentLoaded', () => {
-  // 1. Sidebar Navigation
+  // 1. 侧边栏导航切换
   const navButtons = document.querySelectorAll('.sidebar-item');
   const sections = document.querySelectorAll('.settings-section');
 
@@ -20,7 +19,7 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   });
 
-  // 2. Load LLM Configuration
+  // 2. 读取大模型配置
   const providerLabel = document.getElementById('label-provider');
   const baseURLlabel = document.getElementById('label-baseurl');
   const keyStatusLabel = document.getElementById('label-key-status');
@@ -37,27 +36,27 @@ document.addEventListener('DOMContentLoaded', () => {
         const c = data.config;
         if (providerLabel) providerLabel.textContent = c.provider;
         if (baseURLlabel) baseURLlabel.textContent = c.baseURL;
-        if (keyStatusLabel) keyStatusLabel.textContent = `Key Configured (${c.maskedKey})`;
+        if (keyStatusLabel) keyStatusLabel.textContent = `凭据正常 (${c.maskedKey})`;
         if (selectActiveModel && c.activeModel) {
           selectActiveModel.value = c.activeModel;
         }
       }
     } catch (err) {
-      console.warn('Could not load remote LLM config, using default AMD Radeon parameters:', err.message);
+      console.warn('无法读取远程 LLM 配置，采用默认配置:', err.message);
     }
   }
 
   loadLLMConfig();
 
-  // 3. Ping / Test LLM Connection
+  // 3. Ping 探针测试大模型连通性
   if (btnTestLLM) {
     btnTestLLM.addEventListener('click', async () => {
       const model = selectActiveModel ? selectActiveModel.value : 'DeepSeek-V4-Flash';
       btnTestLLM.disabled = true;
-      btnTestLLM.innerHTML = '<span>⏳</span> Pinging...';
+      btnTestLLM.innerHTML = '<span>⏳</span> 正在测试...';
       if (llmTestResult) {
         llmTestResult.style.display = 'block';
-        llmTestResult.textContent = `Connecting to AMD Radeon upstream API (${model})...\nWaiting for response...`;
+        llmTestResult.textContent = `正在向上游 AMD Radeon API (${model}) 发起探针请求...\n等待模型返回...`;
       }
 
       try {
@@ -68,24 +67,24 @@ document.addEventListener('DOMContentLoaded', () => {
         });
         const result = await res.json();
         btnTestLLM.disabled = false;
-        btnTestLLM.innerHTML = '<span>⚡</span> Ping Model';
+        btnTestLLM.innerHTML = '<span>⚡</span> Ping 测试模型';
 
         if (result.success) {
-          llmTestResult.textContent = `[SUCCESS] ${result.message}\n• Model: ${result.model}\n• Latency: ${result.latencyMs} ms\n• Model Reply: "${result.reply}"\n• Status: HTTP 200 OK`;
+          llmTestResult.textContent = `[测试成功] ${result.message}\n• 当前测试模型: ${result.model}\n• 边缘端往返延迟: ${result.latencyMs} 毫秒\n• 模型回复内容: "${result.reply}"\n• 状态码: HTTP 200 OK`;
         } else {
-          llmTestResult.textContent = `[ERROR] Failed to reach model:\n${result.error || 'Unknown error'}`;
+          llmTestResult.textContent = `[连接错误] 无法连通大模型:\n${result.error || '未知网络错误'}`;
         }
       } catch (err) {
         btnTestLLM.disabled = false;
-        btnTestLLM.innerHTML = '<span>⚡</span> Ping Model';
+        btnTestLLM.innerHTML = '<span>⚡</span> Ping 测试模型';
         if (llmTestResult) {
-          llmTestResult.textContent = `[CONNECTION ERROR] ${err.message}`;
+          llmTestResult.textContent = `[网络异常] 请求失败: ${err.message}`;
         }
       }
     });
   }
 
-  // 4. Radar Community Scanner
+  // 4. 发起社区扫描
   const btnRunScan = document.getElementById('btn-run-scan');
   const scanTarget = document.getElementById('scan-target');
   const scanLimit = document.getElementById('scan-limit');
@@ -105,9 +104,9 @@ document.addEventListener('DOMContentLoaded', () => {
       }
 
       btnRunScan.disabled = true;
-      btnRunScan.innerHTML = '<span>⏳</span> Scanning...';
+      btnRunScan.innerHTML = '<span>⏳</span> 正在扫描中...';
       if (scanTerminal) {
-        scanTerminal.textContent = `[SCAN INITIATED] Target: ${target}, Batch: ${limit} discussions...\nContacting community API and streaming discussions into inference pipeline...\n`;
+        scanTerminal.textContent = `[扫描已启动] 目标渠道: ${target}，批次上限: ${limit} 篇新讨论...\n正在连接社区接口并流式输入大模型推理管道...\n`;
       }
 
       try {
@@ -124,36 +123,36 @@ document.addEventListener('DOMContentLoaded', () => {
 
         const data = await res.json();
         btnRunScan.disabled = false;
-        btnRunScan.innerHTML = '<span>🚀</span> Start Radar Scan';
+        btnRunScan.innerHTML = '<span>🚀</span> 开始雷达扫描';
 
         if (data.success) {
-          let output = `[SCAN COMPLETE] Harvested & evaluated ${data.totalScanned || limit} discussions.\n\n`;
+          let output = `[扫描完成] 成功抓取并评估 ${data.totalScanned || limit} 条社区讨论。\n\n`;
           if (data.cards && data.cards.length > 0) {
             data.cards.forEach((item, idx) => {
               const p = item.painCard;
               const s = item.opportunityScore;
-              const badge = s.is_killed ? '[KILLED]' : `[SCORE: ${s.total_score || s.total_weighted_score}]`;
-              output += `(${idx + 1}) ${badge} ${p.headline}\n    Friction: ${p.friction ? p.friction.slice(0, 90) : ''}...\n    MVP: ${s.recommended_wedge_mvp || 'None'}\n\n`;
+              const badge = s.is_killed ? '[已杀死淘汰]' : `[评分: ${s.total_score || s.total_weighted_score} 分]`;
+              output += `(${idx + 1}) ${badge} ${p.headline}\n    核心阻碍: ${p.friction ? p.friction.slice(0, 90) : ''}...\n    建议切入 MVP: ${s.recommended_wedge_mvp || '无'}\n\n`;
             });
           } else {
-            output += 'No high-friction complaints identified in this batch.\n';
+            output += '本批次中未发现具备强烈商业摩擦的痛点帖子。\n';
           }
           scanTerminal.textContent = output;
-          loadCurationCards(); // refresh card list
+          loadCurationCards(); // 刷新卡片列表
         } else {
-          scanTerminal.textContent = `[SCAN ERROR] ${data.error || 'Failed to complete scan'}`;
+          scanTerminal.textContent = `[扫描异常] ${data.error || '扫描任务未能完成'}`;
         }
       } catch (err) {
         btnRunScan.disabled = false;
-        btnRunScan.innerHTML = '<span>🚀</span> Start Radar Scan';
+        btnRunScan.innerHTML = '<span>🚀</span> 开始雷达扫描';
         if (scanTerminal) {
-          scanTerminal.textContent = `[NETWORK ERROR] ${err.message}`;
+          scanTerminal.textContent = `[网络连接异常] ${err.message}`;
         }
       }
     });
   }
 
-  // 5. Card Curation Management
+  // 5. 机会卡片发布管理
   const curationList = document.getElementById('curation-list');
 
   async function loadCurationCards() {
@@ -164,11 +163,11 @@ document.addEventListener('DOMContentLoaded', () => {
       const cards = data.cards || [];
 
       if (cards.length === 0) {
-        curationList.innerHTML = '<div style="padding:24px; text-align:center; color:var(--text-secondary);">No opportunities found. Run a scan to discover pain points.</div>';
+        curationList.innerHTML = '<div style="padding:24px; text-align:center; color:var(--text-secondary);">暂无机会卡片。请先执行一次雷达扫描。</div>';
         return;
       }
 
-      // Read hidden cards from localStorage
+      // 从 localStorage 读取隐藏卡片
       const hiddenIds = new Set(JSON.parse(localStorage.getItem('dr_hidden_cards') || '[]'));
 
       curationList.innerHTML = cards.map((item, idx) => {
@@ -179,7 +178,7 @@ document.addEventListener('DOMContentLoaded', () => {
         const isVisible = !hiddenIds.has(p.id);
 
         const statusClass = isKilled ? 'danger' : scoreVal >= 75 ? 'success' : 'warning';
-        const statusText = isKilled ? 'Killed' : scoreVal >= 75 ? 'High Potential' : 'Moderate';
+        const statusText = isKilled ? '已杀死淘汰' : scoreVal >= 75 ? '高潜力' : '边际中等';
 
         return `
           <div class="curation-item">
@@ -188,15 +187,15 @@ document.addEventListener('DOMContentLoaded', () => {
               <div class="curation-item-meta">
                 <span class="status-pill ${statusClass}">
                   <span class="status-dot"></span>
-                  ${statusText} (${scoreVal})
+                  ${statusText} (${scoreVal} 分)
                 </span>
-                <span>Audience: ${p.target_audience?.role || 'General'}</span>
-                <span>Source: ${p.channel || 'web'}</span>
+                <span>目标客群: ${p.target_audience?.role || '通用'}</span>
+                <span>来源: ${p.channel || 'web'}</span>
               </div>
             </div>
             <div style="display:flex; align-items:center; gap:12px;">
               <span style="font-size:12px; color:var(--text-secondary);">
-                ${isVisible ? 'Published' : 'Hidden'}
+                ${isVisible ? '公开发布' : '已隐藏'}
               </span>
               <label class="switch">
                 <input type="checkbox" class="curation-toggle" data-id="${p.id}" ${isVisible ? 'checked' : ''}>
@@ -207,7 +206,7 @@ document.addEventListener('DOMContentLoaded', () => {
         `;
       }).join('');
 
-      // Add toggle listeners
+      // 绑定切换开关
       document.querySelectorAll('.curation-toggle').forEach(chk => {
         chk.addEventListener('change', (e) => {
           const cardId = e.target.getAttribute('data-id');
@@ -222,13 +221,13 @@ document.addEventListener('DOMContentLoaded', () => {
         });
       });
     } catch (err) {
-      curationList.innerHTML = `<div style="padding:24px; color:var(--accent-red);">Error loading cards: ${err.message}</div>`;
+      curationList.innerHTML = `<div style="padding:24px; color:var(--accent-red);">读取机会卡片出错: ${err.message}</div>`;
     }
   }
 
   loadCurationCards();
 
-  // 6. Lock / Logout
+  // 6. 锁定退出
   const btnLogout = document.getElementById('btn-logout');
   if (btnLogout) {
     btnLogout.addEventListener('click', () => {

@@ -1,10 +1,10 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="zh-CN">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Demand Radar // 8-Dimensional Customer Demand Intelligence</title>
-  <meta name="description" content="Mines live community discussions into verified pain points and 8-dimensional commercial opportunity scores for solo builders.">
+  <title>Demand Radar // 需求雷达 · 独立开发者商业机会发现引擎</title>
+  <meta name="description" content="持续监听海外开发者与创业者真实社区抱怨，将碎片化信号转化为结构化痛点卡片，并通过 8 维商业模型与硬伤门禁严格过滤。">
   <link rel="stylesheet" href="style.css">
   <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><circle cx=%2250%22 cy=%2250%22 r=%2244%22 fill=%22none%22 stroke=%22%232997ff%22 stroke-width=%228%22/><circle cx=%2250%22 cy=%2250%22 r=%2214%22 fill=%22%232997ff%22/></svg>">
 </head>
@@ -17,15 +17,15 @@
     <div class="nav-inner">
       <a href="/" class="nav-brand">
         <div class="nav-logo-mark">DR</div>
-        <span class="nav-brand-text">Demand Radar</span>
+        <span class="nav-brand-text">Demand Radar 需求雷达</span>
       </a>
 
       <div class="nav-right">
         <div class="nav-badge-status">
           <span class="pulse-dot"></span>
-          <span>LIVE MONITOR</span>
+          <span>实时监听中</span>
         </div>
-        <a href="/admin" class="nav-admin-link">Admin 🔒</a>
+        <a href="/admin" class="nav-admin-link">后台管理 🔒</a>
       </div>
     </div>
   </nav>
@@ -33,11 +33,11 @@
   <main class="container">
     <!-- Hero Section -->
     <header class="hero-section">
-      <div class="hero-eyebrow">Customer Demand Intelligence</div>
-      <h1 class="hero-title">Find what people need<br>before writing code.</h1>
+      <div class="hero-eyebrow">独立开发者商业机会发现引擎</div>
+      <h1 class="hero-title">在写代码之前，<br>先发现人们真正想买什么。</h1>
       <p class="hero-subtitle">
-        Continuously listens to organic friction in developer and founder communities.
-        Extracts verified pain points and stress-tests commercial viability using an 8-dimensional scoring engine.
+        告别主观臆想。需求雷达持续监听 Reddit 与 Hacker News 社区中的真实工作流摩擦，
+        运用大模型提取结构化痛点，并通过 8 维对抗性商业模型和一票否决机制，帮你提前杀死伪需求。
       </p>
     </header>
 
@@ -45,19 +45,19 @@
     <section class="metrics-strip">
       <div class="metric-cell">
         <div class="metric-value" id="metric-total">8</div>
-        <div class="metric-label">Signals Analyzed</div>
+        <div class="metric-label">已深度分析信号</div>
       </div>
       <div class="metric-cell">
         <div class="metric-value" style="color:var(--accent-green);" id="metric-high">4</div>
-        <div class="metric-label">High Potential (≥75)</div>
+        <div class="metric-label">高潜力机会 (≥75)</div>
       </div>
       <div class="metric-cell">
         <div class="metric-value" style="color:var(--accent-red);" id="metric-killed">3</div>
-        <div class="metric-label">Fatal Kills Blocked</div>
+        <div class="metric-label">一票否决拦截</div>
       </div>
       <div class="metric-cell">
         <div class="metric-value" style="color:var(--accent-blue);">94%</div>
-        <div class="metric-label">Validation Precision</div>
+        <div class="metric-label">验证准确率</div>
       </div>
     </section>
 
@@ -65,15 +65,15 @@
     <section class="controls-bar">
       <!-- Status Filter (Segmented Control) -->
       <div class="segmented-control" id="status-filters">
-        <button class="seg-btn active" data-filter="all">All Opportunities</button>
-        <button class="seg-btn" data-filter="high">High Potential (≥75)</button>
-        <button class="seg-btn" data-filter="moderate">Moderate</button>
-        <button class="seg-btn" data-filter="killed">Killed (Hard Filter)</button>
+        <button class="seg-btn active" data-filter="all">全部机会</button>
+        <button class="seg-btn" data-filter="high">高潜力 (≥75)</button>
+        <button class="seg-btn" data-filter="moderate">中等潜力</button>
+        <button class="seg-btn" data-filter="killed">已杀死 (硬伤淘汰)</button>
       </div>
 
       <!-- Source Filter (Subtle Pills) -->
       <div class="source-filter-row" id="source-filters">
-        <button class="source-pill active" data-source="all">All Channels</button>
+        <button class="source-pill active" data-source="all">全部渠道</button>
         <button class="source-pill" data-source="reddit">Reddit</button>
         <button class="source-pill" data-source="hackernews">Hacker News</button>
         <button class="source-pill" data-source="x_twitter">X / Twitter</button>
@@ -83,7 +83,7 @@
     <!-- Opportunity Cards List -->
     <section id="cards-container" class="cards-grid">
       <div style="padding:48px 0; text-align:center; color:var(--text-secondary);">
-        Loading verified opportunities...
+        正在加载已验证的商业机会...
       </div>
     </section>
   </main>
@@ -99,14 +99,14 @@
   <!-- Footer -->
   <footer class="apple-footer">
     <div>
-      Demand Radar · Open Source Demand Mining & Opportunity Scoring Framework
+      Demand Radar · 面向独立开发者的开源需求发掘与商业验证方法论体系
     </div>
     <div style="display:flex; gap:16px; font-size:12px;">
-      <a href="https://github.com/ggxx39/demand-radar" target="_blank">GitHub</a>
+      <a href="https://github.com/ggxx39/demand-radar" target="_blank">开源仓库 (GitHub)</a>
       <span>·</span>
-      <a href="/admin">Admin Control Center</a>
+      <a href="/admin">管理后台</a>
       <span>·</span>
-      <a href="https://github.com/ggxx39/demand-radar/blob/main/LICENSE" target="_blank">MIT License</a>
+      <a href="https://github.com/ggxx39/demand-radar/blob/main/LICENSE" target="_blank">MIT 开源许可</a>
     </div>
   </footer>
 

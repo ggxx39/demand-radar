@@ -1,111 +1,111 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="zh-CN">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Demand Radar // Admin Control Center</title>
+  <title>Demand Radar // 控制中心 · 系统管理后台</title>
   <link rel="stylesheet" href="admin.css">
   <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><circle cx=%2250%22 cy=%2250%22 r=%2244%22 fill=%22none%22 stroke=%22%230a84ff%22 stroke-width=%228%22/><circle cx=%2250%22 cy=%2250%22 r=%2214%22 fill=%22%230a84ff%22/></svg>">
 </head>
 <body>
   <div class="admin-layout">
-    <!-- Sidebar (macOS Settings Style) -->
+    <!-- 侧边栏 (macOS 系统偏好设置风格) -->
     <aside class="sidebar">
       <div class="sidebar-brand">
         <div class="sidebar-brand-icon">DR</div>
         <div>
-          <div class="sidebar-brand-title">Demand Radar</div>
-          <div style="font-size:11px; color:var(--text-secondary);">System Settings</div>
+          <div class="sidebar-brand-title">需求雷达</div>
+          <div style="font-size:11px; color:var(--text-secondary);">系统控制中心</div>
         </div>
-        <span class="sidebar-brand-badge">ADMIN</span>
+        <span class="sidebar-brand-badge">管理员</span>
       </div>
 
       <nav class="sidebar-nav">
         <button class="sidebar-item active" data-target="section-llm">
           <span class="sidebar-item-icon">🤖</span>
-          <span>LLM & Inference</span>
+          <span>大模型与推理设置</span>
         </button>
         <button class="sidebar-item" data-target="section-scanner">
           <span class="sidebar-item-icon">📡</span>
-          <span>Radar Scanner</span>
+          <span>雷达社区扫描器</span>
         </button>
         <button class="sidebar-item" data-target="section-curation">
           <span class="sidebar-item-icon">🗂</span>
-          <span>Card Curation</span>
+          <span>机会卡片发布管理</span>
         </button>
         <button class="sidebar-item" data-target="section-landing">
           <span class="sidebar-item-icon">🌐</span>
-          <span>Landing Page</span>
+          <span>前台展示策略</span>
         </button>
       </nav>
 
       <div class="sidebar-footer">
         <a href="/" class="sidebar-footer-link" target="_blank">
-          <span>↗</span> View Public Site
+          <span>↗</span> 打开前台站点
         </a>
         <button id="btn-logout" class="apple-btn" style="padding:4px 10px; font-size:11px;">
-          Lock
+          锁定退出
         </button>
       </div>
     </aside>
 
-    <!-- Main Content -->
+    <!-- 主内容区 -->
     <main class="main-content">
-      <!-- Section 1: LLM & Inference -->
+      <!-- 模块 1: 大模型与推理设置 -->
       <section id="section-llm" class="settings-section active">
         <div class="content-header">
-          <h1 class="content-title">LLM & Inference Settings</h1>
-          <p class="content-subtitle">Manage deep learning models and API endpoints used for pain-point extraction and 8-dimensional scoring.</p>
+          <h1 class="content-title">大模型与推理设置</h1>
+          <p class="content-subtitle">管理用于痛点抽取和 8 维对抗性商业打分的大模型后端与 API 端点配置。</p>
         </div>
 
-        <div class="section-label">Active Provider</div>
+        <div class="section-label">当前运行供应商</div>
         <div class="inset-card">
           <div class="inset-row">
             <div class="inset-row-info">
-              <span class="inset-row-title">Inference Engine</span>
-              <span class="inset-row-desc">Configured upstream API endpoint for text completion</span>
+              <span class="inset-row-title">推理引擎</span>
+              <span class="inset-row-desc">用于自动化结构化抽取与分析的上游接口</span>
             </div>
             <span class="status-pill success">
               <span class="status-dot"></span>
-              <span id="label-provider">AMD Radeon (OpenCode Configured)</span>
+              <span id="label-provider">AMD Radeon (OpenCode 本机配置)</span>
             </span>
           </div>
           <div class="inset-row">
             <div class="inset-row-info">
-              <span class="inset-row-title">Base URL</span>
+              <span class="inset-row-title">服务基准地址 (Base URL)</span>
               <span class="inset-row-desc" id="label-baseurl">https://developer.amd.com.cn/radeon/api/v1</span>
             </div>
-            <span class="status-pill" style="font-family:var(--font-mono); font-size:11px;">HTTPS Validated</span>
+            <span class="status-pill" style="font-family:var(--font-mono); font-size:11px;">HTTPS 已验证</span>
           </div>
           <div class="inset-row">
             <div class="inset-row-info">
-              <span class="inset-row-title">API Authentication</span>
-              <span class="inset-row-desc">Secured on Cloudflare Edge via Pages Secrets (never exposed publicly)</span>
+              <span class="inset-row-title">API 凭据安全存储</span>
+              <span class="inset-row-desc">凭据已在 Cloudflare 边缘端加密脱敏，绝不对外暴露明文</span>
             </div>
-            <span class="status-pill success" id="label-key-status">Key Configured (rc-am••••)</span>
+            <span class="status-pill success" id="label-key-status">凭据正常 (rc-am••••)</span>
           </div>
         </div>
 
-        <div class="section-label">Model Selection</div>
+        <div class="section-label">推理模型选择</div>
         <div class="inset-card">
           <div class="inset-row">
             <div class="inset-row-info">
-              <span class="inset-row-title">Default Reasoning Model</span>
-              <span class="inset-row-desc">Model employed for JSON Schema extraction & adversarial scoring</span>
+              <span class="inset-row-title">核心评估模型</span>
+              <span class="inset-row-desc">严格遵循 JSON Schema 规范与 8 维商业打分准则的模型</span>
             </div>
             <select id="select-active-model" class="apple-select">
-              <option value="DeepSeek-V4-Flash" selected>DeepSeek V4 Flash (Fast, Strict JSON)</option>
-              <option value="Qwen3.8-Flash-Next">Qwen 3.8 Flash Next (High Reasoning Depth)</option>
-              <option value="MiniCPM5-1B">MiniCPM 5 (Edge Lightweight)</option>
+              <option value="DeepSeek-V4-Flash" selected>DeepSeek V4 Flash (极速、严格 JSON 格式)</option>
+              <option value="Qwen3.8-Flash-Next">Qwen 3.8 Flash Next (具备深度推理思考链)</option>
+              <option value="MiniCPM5-1B">MiniCPM 5 (超轻量级边缘模型)</option>
             </select>
           </div>
           <div class="inset-row">
             <div class="inset-row-info">
-              <span class="inset-row-title">Test Live Connection</span>
-              <span class="inset-row-desc">Send a verification ping to the active model and measure round-trip latency</span>
+              <span class="inset-row-title">实时连通性测试</span>
+              <span class="inset-row-desc">向指定大模型发送探针，测量边缘端到上游模型的往返延迟</span>
             </div>
             <button id="btn-test-llm" class="apple-btn primary">
-              <span>⚡</span> Ping Model
+              <span>⚡</span> Ping 测试模型
             </button>
           </div>
         </div>
@@ -113,87 +113,87 @@
         <div id="llm-test-result" class="terminal-box" style="display:none;"></div>
       </section>
 
-      <!-- Section 2: Radar Scanner -->
+      <!-- 模块 2: 雷达社区扫描器 -->
       <section id="section-scanner" class="settings-section">
         <div class="content-header">
-          <h1 class="content-title">Radar Community Scanner</h1>
-          <p class="content-subtitle">Execute protected scans against developer and founder communities to discover emerging pain points.</p>
+          <h1 class="content-title">雷达社区扫描器</h1>
+          <p class="content-subtitle">受密码保护的社区抓取引擎，向目标开发者或创业者社群发起实时痛点挖掘。</p>
         </div>
 
-        <div class="section-label">Scan Parameters</div>
+        <div class="section-label">扫描任务参数</div>
         <div class="inset-card">
           <div class="inset-row">
             <div class="inset-row-info">
-              <span class="inset-row-title">Community Target</span>
-              <span class="inset-row-desc">Select community channel to harvest signals from</span>
+              <span class="inset-row-title">目标监测社群</span>
+              <span class="inset-row-desc">选择要采集原始用户摩擦信号的垂直圈子</span>
             </div>
             <select id="scan-target" class="apple-select">
-              <option value="r/SaaS">Reddit: r/SaaS (Micro-SaaS & Bootstrapping)</option>
-              <option value="r/SideProject">Reddit: r/SideProject (Indie Builders)</option>
-              <option value="r/webdev">Reddit: r/webdev (Developer Tooling)</option>
-              <option value="r/devops">Reddit: r/devops (Cloud & Infra)</option>
-              <option value="hn:ask">Hacker News: Ask HN (Workflow Friction)</option>
+              <option value="r/SaaS">Reddit: r/SaaS (独立微型 SaaS 与自举创业)</option>
+              <option value="r/SideProject">Reddit: r/SideProject (个人副业开发者)</option>
+              <option value="r/webdev">Reddit: r/webdev (全栈与前端开发痛点)</option>
+              <option value="r/devops">Reddit: r/devops (云原生与 CI/CD 运维)</option>
+              <option value="hn:ask">Hacker News: Ask HN (极客工作流摩擦)</option>
             </select>
           </div>
           <div class="inset-row">
             <div class="inset-row-info">
-              <span class="inset-row-title">Batch Size</span>
-              <span class="inset-row-desc">Number of recent discussions to evaluate per run</span>
+              <span class="inset-row-title">抓取深度批次</span>
+              <span class="inset-row-desc">单次评估的新帖数量上限</span>
             </div>
             <select id="scan-limit" class="apple-select">
-              <option value="3">3 posts (Quick check)</option>
-              <option value="5" selected>5 posts (Recommended)</option>
-              <option value="10">10 posts (Deep scan)</option>
+              <option value="3">3 篇讨论 (极速验证)</option>
+              <option value="5" selected>5 篇讨论 (标准推荐)</option>
+              <option value="10">10 篇讨论 (深度全量)</option>
             </select>
           </div>
           <div class="inset-row">
             <div class="inset-row-info">
-              <span class="inset-row-title">Initiate Live Harvest</span>
-              <span class="inset-row-desc">Protected execution using backend credentials</span>
+              <span class="inset-row-title">发起自动化扫描</span>
+              <span class="inset-row-desc">调用后台受保护凭据执行抽取与 8 维商业打分</span>
             </div>
             <button id="btn-run-scan" class="apple-btn primary">
-              <span>🚀</span> Start Radar Scan
+              <span>🚀</span> 开始雷达扫描
             </button>
           </div>
         </div>
 
-        <div class="section-label">Live Output Log</div>
-        <div id="scan-terminal" class="terminal-box">Ready for command. Select community and start scan.</div>
+        <div class="section-label">实时控制台日志</div>
+        <div id="scan-terminal" class="terminal-box">等待任务指令。选择目标社群后点击开始扫描。</div>
       </section>
 
-      <!-- Section 3: Card Curation -->
+      <!-- 模块 3: 机会卡片发布管理 -->
       <section id="section-curation" class="settings-section">
         <div class="content-header">
-          <h1 class="content-title">Opportunity Curation</h1>
-          <p class="content-subtitle">Control which opportunities appear on the public landing page. Toggle visibility or feature top prospects.</p>
+          <h1 class="content-title">机会卡片发布管理</h1>
+          <p class="content-subtitle">精细化控制哪些已验证的商业机会呈现在公网前台。支持一键隐藏或公开发布。</p>
         </div>
 
-        <div class="section-label">All Discovered Opportunities</div>
+        <div class="section-label">全部已识别商业机会清单</div>
         <div class="inset-card" id="curation-list">
-          <div style="padding:24px; text-align:center; color:var(--text-secondary);">Loading cards...</div>
+          <div style="padding:24px; text-align:center; color:var(--text-secondary);">正在读取机会数据...</div>
         </div>
       </section>
 
-      <!-- Section 4: Landing Page Settings -->
+      <!-- 模块 4: 前台展示策略 -->
       <section id="section-landing" class="settings-section">
         <div class="content-header">
-          <h1 class="content-title">Landing Page Controls</h1>
-          <p class="content-subtitle">Tune the public presentation of Demand Radar.</p>
+          <h1 class="content-title">前台展示策略控制</h1>
+          <p class="content-subtitle">调优前台公开站点的安全等级与排版策略。</p>
         </div>
 
-        <div class="section-label">Hero Messaging</div>
+        <div class="section-label">展示文案与门禁</div>
         <div class="inset-card">
           <div class="inset-row">
             <div class="inset-row-info">
-              <span class="inset-row-title">Main Headline</span>
-              <span class="inset-row-desc">The primary value proposition presented to visitors</span>
+              <span class="inset-row-title">主标题宣传文案</span>
+              <span class="inset-row-desc">前台首屏的核心价值主张</span>
             </div>
-            <input type="text" class="apple-input" style="width:340px;" value="Find what people need before writing code." readonly>
+            <input type="text" class="apple-input" style="width:340px;" value="在写代码之前，先发现人们真正想买什么。" readonly>
           </div>
           <div class="inset-row">
             <div class="inset-row-info">
-              <span class="inset-row-title">Public Live Scan Button</span>
-              <span class="inset-row-desc">Keep disabled so public visitors cannot consume your LLM API quota</span>
+              <span class="inset-row-title">前台公开扫描开关</span>
+              <span class="inset-row-desc">保持关闭，严禁公网匿名访客消耗你的 LLM API 额度</span>
             </div>
             <label class="switch">
               <input type="checkbox" disabled>
@@ -202,8 +202,8 @@
           </div>
           <div class="inset-row">
             <div class="inset-row-info">
-              <span class="inset-row-title">Clean Presentation Mode (Apple Style)</span>
-              <span class="inset-row-desc">Enforce high-whitespace, low-density layout to prevent cognitive overload</span>
+              <span class="inset-row-title">Apple 极简低密度排版模式</span>
+              <span class="inset-row-desc">强制开启大面积呼吸留白与低信息密度，杜绝视觉疲劳</span>
             </div>
             <label class="switch">
               <input type="checkbox" checked disabled>
