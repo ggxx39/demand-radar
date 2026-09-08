@@ -62,16 +62,28 @@ function setPalette(palette) {
 // Data Fetching
 async function loadCards() {
   try {
-    // Try local static JSON first
-    const res = await fetch('/data/cards.json');
-    if (!res.ok) throw new Error(`HTTP ${res.status}`);
-    const data = await res.json();
+    let data = null;
+    // Try Cloudflare Pages Functions API endpoint first
+    try {
+      const apiRes = await fetch('/api/cards');
+      if (apiRes.ok) {
+        const json = await apiRes.json();
+        data = json.cards || (Array.isArray(json) ? json : null);
+      }
+    } catch (_) {}
+
+    // Fall back to local static JSON
+    if (!data) {
+      const res = await fetch('/data/cards.json');
+      if (!res.ok) throw new Error(`HTTP ${res.status}`);
+      data = await res.json();
+    }
     
     // Check if user has added custom scanned cards in localStorage
     const localScans = JSON.parse(localStorage.getItem('dr_custom_cards') || '[]');
     state.cards = [...localScans, ...data];
   } catch (err) {
-    console.warn('Failed to load local static cards, loading embedded fallback:', err);
+    console.warn('Failed to load cards, loading embedded fallback:', err);
     state.cards = getEmbeddedFallbackCards();
   }
 
@@ -109,7 +121,8 @@ function applyFilters() {
       if (source === 'reddit' && !channel.includes('reddit')) return false;
       if (source === 'hn' && !channel.includes('hacker') && !channel.includes('hn')) return false;
       if (source === 'github' && !channel.includes('github')) return false;
-      if (source === 'other' && (channel.includes('reddit') || channel.includes('hacker') || channel.includes('hn'))) return false;
+      if ((source === 'twitter' || source === 'x') && !channel.includes('twitter') && !channel.includes('x')) return false;
+      if (source === 'other' && (channel.includes('reddit') || channel.includes('hacker') || channel.includes('hn') || channel.includes('twitter') || channel.includes('x') || channel.includes('github'))) return false;
     }
 
     // Status filter
@@ -804,7 +817,7 @@ async function simulateLocalScan(sub, limit, logger) {
       title: 'ReplicaShield: Multi-Region PostgreSQL Desync Validator',
       one_liner: 'A zero-downtime health checker that asserts cross-region replica consistency before routing production write traffic.',
       evaluated_at: new Date().toISOString(),
-      evaluator: 'live-radar-scanner',
+      evaluator: 'hybrid',
       dimensions: {
         pain_intensity: { score: 9, weight: 0.15, evidence: 'Direct SLA outage and client refund burn ($950/mo).' },
         frequency: { score: 6, weight: 0.08, evidence: 'Occurs during failovers and heavy traffic bursts.' },
@@ -812,10 +825,10 @@ async function simulateLocalScan(sub, limit, logger) {
         paying_intent: { score: 9, weight: 0.20, evidence: 'Explicit willingness to pay $200/month corporate card spend.' },
         cross_source_recurrence: { score: 7, weight: 0.07, evidence: 'Frequent Postgres discussion topic.' },
         competitive_gap: { score: 8, weight: 0.10, evidence: 'No lightweight atomic CLI exists.' },
-        solo_feasibility: { score: 8, weight: 0.10, evidence: 'Go CLI measuring replication lag and health headers.' },
+        feasibility_solo_buildability: { score: 8, weight: 0.10, evidence: 'Go CLI measuring replication lag and health headers.' },
         distribution_accessibility: { score: 8, weight: 0.15, evidence: 'r/devops, r/SaaS, Hacker News Show HN.' }
       },
-      total_weighted_score: 82.3,
+      total_weighted_score: 81.2,
       hard_kill_filters: {
         pain_intensity_below_6: false,
         paying_intent_below_5: false,
@@ -831,9 +844,12 @@ async function simulateLocalScan(sub, limit, logger) {
     }
   };
 
-  logger(`[RESULT] 🟢 82.3 HIGH POTENTIAL: ReplicaShield`);
+  logger(`[RESULT] 🟢 81.2 HIGH POTENTIAL: ReplicaShield`);
   state.cards = [simulatedCard, ...state.cards];
   state.selectedCardId = simulatedCard.painCard.id;
+  // Persist to local custom store
+  const localScans = JSON.parse(localStorage.getItem('dr_custom_cards') || '[]');
+  localStorage.setItem('dr_custom_cards', JSON.stringify([simulatedCard, ...localScans]));
   applyFilters();
   updateGlobalMetrics();
   showToast('Discovered new high-potential signal!');
@@ -866,6 +882,8 @@ async function submitCustomCard() {
       if (data.card) {
         state.cards.unshift(data.card);
         state.selectedCardId = data.card.painCard.id;
+        const localScans = JSON.parse(localStorage.getItem('dr_custom_cards') || '[]');
+        localStorage.setItem('dr_custom_cards', JSON.stringify([data.card, ...localScans]));
         applyFilters();
         updateGlobalMetrics();
         closeModal();
@@ -877,7 +895,7 @@ async function submitCustomCard() {
 
   // Fallback client-side score computation
   const today = new Date().toISOString().slice(0, 10).replace(/-/g, '');
-  const slug = headline.toLowerCase().replace(/[^a-z0-9]+/g, '-').slice(0, 30);
+  const cleanSlug = headline.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-+|-+$/g, '').slice(0, 30) || 'custom-card';
   const painIntensity = (lossUsd > 200 || lossHours > 10) ? 8 : (lossUsd > 0 || lossHours > 3) ? 6 : 4;
   const payingIntent = (lossUsd > 0 || /pay|budget|cost|\$/i.test(headline + friction)) ? 8 : 3;
   const soloFeasibility = 8;
@@ -885,7 +903,7 @@ async function submitCustomCard() {
 
   const newCard = {
     painCard: {
-      id: `pain-${today}-${slug}`,
+      id: `pain-${today}-${cleanSlug}`,
       created_at: new Date().toISOString(),
       headline,
       target_audience: { role, domain: 'Custom Evaluation', experience_or_scale: 'Active operator' },
@@ -899,7 +917,12 @@ async function submitCustomCard() {
         emotional_toll: painIntensity >= 7 ? 'acute_anxiety_or_rage' : 'mild_annoyance'
       },
       sentiment_intensity: painIntensity >= 7 ? 'high' : 'moderate',
-      paying_intent_clues: { has_explicit_buying_statement: payingIntent >= 6, stated_budget_range: `$${lossUsd}/mo` },
+      paying_intent_clues: {
+        has_explicit_buying_statement: payingIntent >= 6,
+        existing_spend_on_workaround: lossUsd > 0,
+        stated_budget_range: `$${lossUsd}/mo`,
+        evidence_snippets: [quote || headline]
+      },
       source_url: 'https://demandradar.pages.dev',
       channel: 'custom_entry',
       raw_quote: quote || friction,
@@ -907,12 +930,12 @@ async function submitCustomCard() {
       tags: ['custom-tested']
     },
     opportunityScore: {
-      id: `opp-${today}-${slug}`,
-      cluster_id: `cluster-${slug}`,
+      id: `opp-${today}-${cleanSlug}`,
+      cluster_id: `cluster-${cleanSlug}`,
       title: `Solution for ${headline.slice(0, 45)}`,
       one_liner: `Automated resolution for ${headline.slice(0, 50)}.`,
       evaluated_at: new Date().toISOString(),
-      evaluator: 'client-engine',
+      evaluator: 'hybrid',
       dimensions: {
         pain_intensity: { score: painIntensity, weight: 0.15, evidence: `Loss: ${lossHours}h, $${lossUsd}.` },
         frequency: { score: 7, weight: 0.08, evidence: 'Recurring cadence.' },
@@ -920,17 +943,19 @@ async function submitCustomCard() {
         paying_intent: { score: payingIntent, weight: 0.20, evidence: payingIntent >= 5 ? 'Budget indicated.' : 'No budget.' },
         cross_source_recurrence: { score: 6, weight: 0.07, evidence: 'Custom submission.' },
         competitive_gap: { score: 7, weight: 0.10, evidence: 'Untapped niche.' },
-        solo_feasibility: { score: soloFeasibility, weight: 0.10, evidence: 'Solo builder friendly.' },
+        feasibility_solo_buildability: { score: soloFeasibility, weight: 0.10, evidence: 'Solo builder friendly.' },
         distribution_accessibility: { score: 7, weight: 0.15, evidence: 'Direct outreach.' }
       },
       total_weighted_score: isKilled ? 38.5 : 78.4,
       hard_kill_filters: {
         pain_intensity_below_6: painIntensity < 6,
         paying_intent_below_5: payingIntent < 5,
+        unsolvable_for_solo_builder: soloFeasibility < 4,
+        zero_distribution_channel: false,
         is_killed: isKilled,
         kill_reason: isKilled ? 'Fatal Flaw: Low Pain or Zero Budget' : null
       },
-      recommendation: isKilled ? 'kill_immediately' : 'pursue_immediately',
+      recommendation: isKilled ? 'kill' : 'pursue_immediately',
       recommended_wedge_mvp: isKilled ? 'Do not build.' : `Targeted 10-day MVP tackling ${headline.slice(0, 40)}.`,
       target_interview_profile: role,
       next_action: isKilled ? 'Discard idea.' : 'Interview 5 operators with The Mom Test script.'
@@ -939,6 +964,8 @@ async function submitCustomCard() {
 
   state.cards.unshift(newCard);
   state.selectedCardId = newCard.painCard.id;
+  const localScans = JSON.parse(localStorage.getItem('dr_custom_cards') || '[]');
+  localStorage.setItem('dr_custom_cards', JSON.stringify([newCard, ...localScans]));
   applyFilters();
   updateGlobalMetrics();
   closeModal();
@@ -979,14 +1006,35 @@ function showToast(msg) {
   }, 2400);
 }
 
-// Copy Outreach Text
+// Copy Outreach Text with Resilient Clipboard Fallback
 window.copyOutreachText = function(elementId) {
   const el = document.getElementById(elementId);
   if (!el) return;
-  navigator.clipboard.writeText(el.innerText).then(() => {
-    showToast('Copied to clipboard!');
-  });
+  const text = el.innerText || el.textContent;
+  if (navigator.clipboard && typeof navigator.clipboard.writeText === 'function') {
+    navigator.clipboard.writeText(text).then(() => {
+      showToast('Copied to clipboard!');
+    }).catch(() => fallbackCopy(text));
+  } else {
+    fallbackCopy(text);
+  }
 };
+
+function fallbackCopy(text) {
+  try {
+    const ta = document.createElement('textarea');
+    ta.value = text;
+    ta.style.position = 'fixed';
+    ta.style.opacity = '0';
+    document.body.appendChild(ta);
+    ta.select();
+    document.execCommand('copy');
+    ta.remove();
+    showToast('Copied to clipboard!');
+  } catch (_) {
+    showToast('Could not copy to clipboard');
+  }
+}
 
 // HTML Escaping
 function escapeHtml(str) {
@@ -1028,7 +1076,9 @@ function getEmbeddedFallbackCards() {
         sentiment_intensity: "high",
         paying_intent_clues: {
           has_explicit_buying_statement: true,
-          stated_budget_range: "$29-$49/month flat team pricing"
+          existing_spend_on_workaround: true,
+          stated_budget_range: "$29-$49/month flat team pricing",
+          evidence_snippets: ["I would gladly pay $30-$40/month for a lightweight Action that syncs cache directly to S3 or R2."]
         },
         source_url: "https://reddit.com/r/devops/comments/1example/gha_docker_cache_eviction",
         channel: "reddit",
@@ -1055,7 +1105,14 @@ function getEmbeddedFallbackCards() {
           distribution_accessibility: { score: 9, weight: 0.15, evidence: "GitHub Marketplace and r/devops." }
         },
         total_weighted_score: 82.6,
-        hard_kill_filters: { is_killed: false },
+        hard_kill_filters: {
+          pain_intensity_below_6: false,
+          paying_intent_below_5: false,
+          unsolvable_for_solo_builder: false,
+          zero_distribution_channel: false,
+          is_killed: false,
+          kill_reason: null
+        },
         recommendation: "pursue_immediately",
         recommended_wedge_mvp: "Composite GitHub Action wrapping Buildx cache exporter to Cloudflare R2 bucket.",
         target_interview_profile: "Staff DevOps managing CI for 5-15 dev teams.",

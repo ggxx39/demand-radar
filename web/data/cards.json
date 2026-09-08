@@ -218,7 +218,7 @@
           "rubric_tier": "strong_7_8"
         }
       },
-      "total_weighted_score": 86.4,
+      "total_weighted_score": 84.2,
       "hard_kill_filters": {
         "pain_intensity_below_6": false,
         "paying_intent_below_5": false,
@@ -452,7 +452,7 @@
           "rubric_tier": "strong_7_8"
         }
       },
-      "total_weighted_score": 80.4,
+      "total_weighted_score": 80.0,
       "hard_kill_filters": {
         "pain_intensity_below_6": false,
         "paying_intent_below_5": false,
@@ -522,53 +522,53 @@
         "pain_intensity": {
           "score": 6,
           "weight": 0.15,
-          "evidence": "Annoying and time-consuming, but rarely fatal to a creator's livelihood.",
-          "rubric_tier": "moderate_5_6"
+          "evidence": "Annoying delay during final video exports, but not a catastrophic business killer for most creators.",
+          "rubric_tier": "moderate_4_6"
         },
         "frequency": {
           "score": 6,
           "weight": 0.08,
-          "evidence": "Occurs 2-3 times per week during video export passes.",
-          "rubric_tier": "moderate_5_6"
+          "evidence": "Occurs 1-3 times a week during scheduled publication windows.",
+          "rubric_tier": "moderate_4_6"
         },
         "workaround_friction": {
-          "score": 6,
+          "score": 5,
           "weight": 0.15,
-          "evidence": "Manual slider adjustments in NLE take 30-45 minutes per project.",
-          "rubric_tier": "moderate_5_6"
+          "evidence": "Creators use manual volume keyframes or free Audacity plugins; tedious but functional.",
+          "rubric_tier": "moderate_4_6"
         },
         "paying_intent": {
           "score": 5,
           "weight": 0.20,
-          "evidence": "Creators prefer one-time Gumroad purchase ($29-$49) rather than recurring monthly SaaS subscriptions.",
-          "rubric_tier": "moderate_5_6"
+          "evidence": "Willing to pay a small one-off Gumroad fee ($29-$49), but high churn and reluctance for recurring SaaS subscriptions.",
+          "rubric_tier": "moderate_4_6"
         },
         "cross_source_recurrence": {
-          "score": 5,
+          "score": 6,
           "weight": 0.07,
-          "evidence": "Complaints exist across Premiere subreddits and YouTube creator forums.",
-          "rubric_tier": "moderate_5_6"
+          "evidence": "Found across X/Twitter and r/premiere, but mostly expressed as occasional workflow gripes.",
+          "rubric_tier": "moderate_4_6"
         },
         "competitive_gap": {
-          "score": 6,
+          "score": 5,
           "weight": 0.10,
-          "evidence": "Auphonic and Descript exist, but are cloud-based, subscription-heavy, and slow for 4K video stems.",
-          "rubric_tier": "moderate_5_6"
+          "evidence": "Auphonic, Descript, and Premiere Auto-Match exist; however, they require heavy uploads or complex multi-step settings.",
+          "rubric_tier": "moderate_4_6"
         },
         "feasibility_solo_buildability": {
           "score": 8,
           "weight": 0.10,
-          "evidence": "Electron or Swift menu-bar wrapper over ffmpeg-normalize filter built in 7 days.",
+          "evidence": "Straightforward macOS Swift app wrapping ffmpeg / libebur128 audio loudness filter.",
           "rubric_tier": "strong_7_8"
         },
         "distribution_accessibility": {
           "score": 6,
           "weight": 0.15,
-          "evidence": "Video editing TikTok/YouTube shorts, r/premiere, creator community discords.",
-          "rubric_tier": "moderate_5_6"
+          "evidence": "YouTube creator community is large but fragmented; requires influencer word-of-mouth or short-form video marketing.",
+          "rubric_tier": "moderate_4_6"
         }
       },
-      "total_weighted_score": 61.2,
+      "total_weighted_score": 57.5,
       "hard_kill_filters": {
         "pain_intensity_below_6": false,
         "paying_intent_below_5": false,
@@ -577,7 +577,7 @@
         "is_killed": false,
         "kill_reason": null
       },
-      "recommendation": "moderate_potential_niche_utility",
+      "recommendation": "archive_or_monitor",
       "recommended_wedge_mvp": "Lightweight Mac drag-and-drop tool wrapper around libebur128 ffmpeg filter sold as a $39 lifetime license.",
       "target_interview_profile": "Solo YouTubers with 20k-100k subscribers who edit their own footage without full-time sound engineers.",
       "next_action": "Build a quick prototype and test if creators are willing to pre-pay $29 on Gumroad."
@@ -683,7 +683,7 @@
           "rubric_tier": "weak_3_4"
         }
       },
-      "total_weighted_score": 36.8,
+      "total_weighted_score": 37.8,
       "hard_kill_filters": {
         "pain_intensity_below_6": true,
         "paying_intent_below_5": true,
@@ -692,7 +692,7 @@
         "is_killed": true,
         "kill_reason": "Pain Intensity (4/10 < 6) and Paying Intent (2/10 < 5) both breached hard kill gates. The problem is easily avoided by using local editors for free."
       },
-      "recommendation": "kill_immediately",
+      "recommendation": "kill",
       "recommended_wedge_mvp": "Do not build. Advise users to use Vite localhost or dummy placeholders.",
       "target_interview_profile": "N/A — Project Killed.",
       "next_action": "Discard opportunity. Do not allocate engineering time."
@@ -786,7 +786,7 @@
           "rubric_tier": "trivial_1_2"
         },
         "feasibility_solo_buildability": {
-          "score": 4,
+          "score": 3,
           "weight": 0.10,
           "evidence": "Building a content community is a high-churn, human-heavy grind with poor software leverage.",
           "rubric_tier": "weak_3_4"
@@ -798,16 +798,16 @@
           "rubric_tier": "weak_3_4"
         }
       },
-      "total_weighted_score": 31.5,
+      "total_weighted_score": 34.6,
       "hard_kill_filters": {
         "pain_intensity_below_6": true,
         "paying_intent_below_5": true,
         "unsolvable_for_solo_builder": true,
         "zero_distribution_channel": false,
         "is_killed": true,
-        "kill_reason": "Triple Fatal Flaw: Paying Intent (1/10 < 5), Pain Intensity (5/10 < 6), and Low Software Leverage. A psychological/societal sentiment cannot be solved by a standalone SaaS wedge."
+        "kill_reason": "Triple Fatal Flaw: Paying Intent (1/10 < 5), Pain Intensity (5/10 < 6), and Low Software Leverage (3/10 < 4). A psychological/societal sentiment cannot be solved by a standalone SaaS wedge."
       },
-      "recommendation": "kill_immediately",
+      "recommendation": "kill",
       "recommended_wedge_mvp": "Do not build a paid SaaS product for this audience.",
       "target_interview_profile": "N/A — Project Killed.",
       "next_action": "Archive and focus on high-intent B2B engineering workflows."
@@ -913,7 +913,7 @@
           "rubric_tier": "moderate_5_6"
         }
       },
-      "total_weighted_score": 31.9,
+      "total_weighted_score": 34.9,
       "hard_kill_filters": {
         "pain_intensity_below_6": true,
         "paying_intent_below_5": true,
@@ -922,7 +922,7 @@
         "is_killed": true,
         "kill_reason": "Fatal Flaw: Pain Intensity (3/10 < 6) and Paying Intent (1/10 < 5). Solved completely by free command `mkcert`."
       },
-      "recommendation": "kill_immediately",
+      "recommendation": "kill",
       "recommended_wedge_mvp": "Do not build.",
       "target_interview_profile": "N/A — Project Killed.",
       "next_action": "Discard."

@@ -325,7 +325,7 @@ function analyzePostHeuristically(post, sub) {
     title: `Automated ${post.title.slice(0, 50)} Solution`,
     one_liner: `A targeted micro-tool addressing ${post.title.slice(0, 60)} with zero configuration.`,
     evaluated_at: new Date().toISOString(),
-    evaluator: 'heuristic-engine',
+    evaluator: 'hybrid',
     dimensions,
     total_weighted_score: totalScore,
     hard_kill_filters: {
@@ -336,7 +336,7 @@ function analyzePostHeuristically(post, sub) {
       is_killed: isKilled,
       kill_reason: killReason
     },
-    recommendation: isKilled ? 'kill_immediately' : totalScore >= 75 ? 'pursue_immediately' : 'moderate_niche_utility',
+    recommendation: isKilled ? 'kill' : totalScore >= 75 ? 'pursue_immediately' : 'deepen_investigation',
     recommended_wedge_mvp: isKilled ? 'Do not build. Fails hard kill gate.' : `Lightweight 10-day MVP solving the root friction directly.`,
     target_interview_profile: `Engineers or operators in ${post.community} who upvoted or commented on the thread.`,
     next_action: isKilled ? 'Discard and mine adjacent problems.' : `Reach out to author ${post.author} on ${post.channel} with The Mom Test script.`

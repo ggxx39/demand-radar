@@ -6,13 +6,27 @@ export async function onRequestGet(context) {
     const status = url.searchParams.get('status');
     const query = url.searchParams.get('q');
 
-    // Fetch the bundled static cards JSON
-    const assetUrl = new URL('/data/cards.json', context.request.url);
-    const res = await context.env.ASSETS.fetch(assetUrl);
-    if (!res.ok) {
-      throw new Error(`Failed to load asset: ${res.status}`);
+    // Fetch the bundled static cards JSON with fallback
+    let items = [];
+    if (context.env && context.env.ASSETS && typeof context.env.ASSETS.fetch === 'function') {
+      try {
+        const assetUrl = new URL('/data/cards.json', context.request.url);
+        const res = await context.env.ASSETS.fetch(assetUrl);
+        if (res.ok) {
+          items = await res.json();
+        }
+      } catch (_) {}
     }
-    let items = await res.json();
+
+    if (!items || items.length === 0) {
+      // Direct relative fetch fallback
+      try {
+        const res = await fetch(new URL('/data/cards.json', context.request.url));
+        if (res.ok) {
+          items = await res.json();
+        }
+      } catch (_) {}
+    }
 
     // Filter by channel/source
     if (source && source !== 'all') {

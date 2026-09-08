@@ -14,7 +14,11 @@ export async function onRequestPost(context) {
     }
 
     const today = new Date().toISOString().slice(0, 10).replace(/-/g, '');
-    const slug = (headline || 'custom').toLowerCase().replace(/[^a-z0-9]+/g, '-').slice(0, 30);
+    const cleanSlug = (headline || 'custom')
+      .toLowerCase()
+      .replace(/[^a-z0-9]+/g, '-')
+      .replace(/^-+|-+$/g, '')
+      .slice(0, 30) || 'custom-hypothesis';
 
     const painIntensity = (lossUsd > 200 || lossHours > 10) ? 8 : (lossUsd > 0 || lossHours > 3) ? 6 : 4;
     const frequency = 7;
@@ -53,7 +57,7 @@ export async function onRequestPost(context) {
 
     const newCard = {
       painCard: {
-        id: `pain-${today}-${slug}`,
+        id: `pain-${today}-${cleanSlug}`,
         created_at: new Date().toISOString(),
         headline,
         target_audience: {
@@ -88,12 +92,12 @@ export async function onRequestPost(context) {
         tags: ['custom-tested', 'demand-radar']
       },
       opportunityScore: {
-        id: `opp-${today}-${slug}`,
-        cluster_id: `cluster-${slug}`,
+        id: `opp-${today}-${cleanSlug}`,
+        cluster_id: `cluster-${cleanSlug}`,
         title: `Automated Solution for ${headline.slice(0, 45)}`,
         one_liner: `A targeted software tool to resolve ${headline.slice(0, 50)}.`,
         evaluated_at: new Date().toISOString(),
-        evaluator: 'scoring-engine',
+        evaluator: 'hybrid',
         dimensions,
         total_weighted_score: totalScore,
         hard_kill_filters: {
@@ -104,7 +108,7 @@ export async function onRequestPost(context) {
           is_killed: isKilled,
           kill_reason: killReason
         },
-        recommendation: isKilled ? 'kill_immediately' : totalScore >= 75 ? 'pursue_immediately' : 'moderate_niche_utility',
+        recommendation: isKilled ? 'kill' : totalScore >= 75 ? 'pursue_immediately' : 'deepen_investigation',
         recommended_wedge_mvp: isKilled ? 'Do not build.' : `Targeted 10-day MVP tackling ${headline.slice(0, 40)}.`,
         target_interview_profile: `${role || 'Operators'} facing this exact friction.`,
         next_action: isKilled ? 'Discard this angle.' : 'Conduct 5 Mom Test interviews to verify current spend.'

@@ -14,10 +14,6 @@
     height = canvas.height = canvas.offsetHeight || 180;
   });
 
-  const centerX = width * 0.82;
-  const centerY = height * 0.55;
-  const maxRadius = Math.min(width, height) * 0.7;
-
   let angle = 0;
   const blips = [
     { dist: 0.35, angle: 0.8, alpha: 0.9, size: 3.5 },
@@ -37,6 +33,9 @@
   function render() {
     ctx.clearRect(0, 0, width, height);
     const color = getAccentColor();
+    const centerX = width * 0.82;
+    const centerY = height * 0.55;
+    const maxRadius = Math.min(width, height) * 0.7;
 
     // Concentric range circles
     ctx.lineWidth = 1;

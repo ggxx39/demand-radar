@@ -184,6 +184,92 @@ oppFiles.forEach(file => {
   }
 });
 
+// 4. Validate Web App Seed Dataset (web/data/cards.json)
+console.log('\n--- 4. Validating Web Application cards.json ---');
+const webCardsPath = path.join(REPO_ROOT, 'web', 'data', 'cards.json');
+try {
+  const webCards = readJsonFile(webCardsPath);
+  if (!Array.isArray(webCards) || webCards.length === 0) {
+    throw new Error('cards.json must be a non-empty array of cards');
+  }
+
+  const validRecommendations = ['pursue_immediately', 'deepen_investigation', 'archive_or_monitor', 'kill'];
+  const validEvaluators = ['llm', 'human', 'hybrid'];
+
+  webCards.forEach((item, idx) => {
+    const card = item.painCard;
+    const opp = item.opportunityScore;
+    if (!card || !opp) {
+      throw new Error(`Card #${idx + 1} missing painCard or opportunityScore container`);
+    }
+
+    // Validate painCard
+    const painRequired = [
+      'id', 'created_at', 'headline', 'target_audience', 'scenario',
+      'friction', 'current_workaround', 'cost_or_loss', 'sentiment_intensity',
+      'paying_intent_clues', 'source_url', 'channel', 'raw_quote', 'confidence'
+    ];
+    for (const req of painRequired) {
+      if (card[req] === undefined) throw new Error(`[${card.id || `card-${idx}`}] Missing required pain property: ${req}`);
+    }
+    if (!validChannels.includes(card.channel)) {
+      throw new Error(`[${card.id}] Invalid channel '${card.channel}'`);
+    }
+    if (!validEmotionalTolls.includes(card.cost_or_loss.emotional_toll)) {
+      throw new Error(`[${card.id}] Invalid emotional_toll '${card.cost_or_loss.emotional_toll}'`);
+    }
+
+    // Validate opportunityScore
+    const oppRequired = [
+      'id', 'cluster_id', 'title', 'one_liner', 'evaluated_at',
+      'evaluator', 'dimensions', 'total_weighted_score', 'hard_kill_filters',
+      'recommendation', 'next_action'
+    ];
+    for (const req of oppRequired) {
+      if (opp[req] === undefined) throw new Error(`[${opp.id || `opp-${idx}`}] Missing required opp property: ${req}`);
+    }
+
+    if (!validRecommendations.includes(opp.recommendation)) {
+      throw new Error(`[${opp.id}] Invalid recommendation '${opp.recommendation}' (must be one of: ${validRecommendations.join(', ')})`);
+    }
+    if (!validEvaluators.includes(opp.evaluator)) {
+      throw new Error(`[${opp.id}] Invalid evaluator '${opp.evaluator}' (must be one of: ${validEvaluators.join(', ')})`);
+    }
+
+    let calculatedScore = 0;
+    let totalWeight = 0;
+    for (const dim of expectedDimensions) {
+      const d = opp.dimensions[dim];
+      if (!d) throw new Error(`[${opp.id}] Missing dimension: ${dim}`);
+      if (d.score < 1 || d.score > 10) throw new Error(`[${opp.id}] Dimension ${dim} score must be 1-10`);
+      calculatedScore += (d.score * d.weight);
+      totalWeight += d.weight;
+    }
+
+    if (Math.abs(totalWeight - 1.0) > 0.01) {
+      throw new Error(`[${opp.id}] Total weights sum (${totalWeight}) != 1.0`);
+    }
+
+    const expectedScore = Math.round(calculatedScore * 10 * 10) / 10;
+    const diff = Math.abs(expectedScore - opp.total_weighted_score);
+    if (diff > 0.5) {
+      throw new Error(`[${opp.id}] Score mismatch: expected ${expectedScore}, found ${opp.total_weighted_score}`);
+    }
+
+    const kill = opp.hard_kill_filters;
+    if (kill.pain_intensity_below_6 !== (opp.dimensions.pain_intensity.score < 6)) {
+      throw new Error(`[${opp.id}] Inconsistent pain_intensity_below_6 flag`);
+    }
+    if (kill.paying_intent_below_5 !== (opp.dimensions.paying_intent.score < 5)) {
+      throw new Error(`[${opp.id}] Inconsistent paying_intent_below_5 flag`);
+    }
+
+    logPass(`web/data/cards.json #${idx + 1} [${card.id} / ${opp.id}, score: ${opp.total_weighted_score}] matches schema & rubrics`);
+  });
+} catch (e) {
+  logFail('web/data/cards.json validation failed', e.message);
+}
+
 console.log(`\n================================================`);
 console.log(`Validation Complete: ${totalChecks} checks run, ${totalErrors} errors.`);
 console.log(`================================================\n`);

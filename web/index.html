@@ -117,6 +117,7 @@
         <button class="filter-pill filter-source active" data-source="all">All</button>
         <button class="filter-pill filter-source" data-source="reddit">Reddit</button>
         <button class="filter-pill filter-source" data-source="hn">Hacker News</button>
+        <button class="filter-pill filter-source" data-source="twitter">X / Twitter</button>
         <button class="filter-pill filter-source" data-source="github">GitHub</button>
       </div>
 
@@ -171,7 +172,7 @@
           Streams raw community discussions from live subreddits or Ask HN, runs LLM prompt extraction to produce atomic Pain Cards, and adversarial 8-dimensional opportunity scoring.
         </div>
 
-        <div style="display:grid; grid-template-columns: 1fr 1fr; gap:12px;">
+        <div class="form-row-2col">
           <div class="form-group">
             <label class="form-label">CHANNEL SOURCE</label>
             <select id="scan-source-select" class="form-select">
@@ -220,7 +221,7 @@
           <input type="text" id="custom-headline" class="form-input" placeholder="e.g. Next.js image optimization bandwidth bills shock founders">
         </div>
 
-        <div style="display:grid; grid-template-columns: 1fr 1fr; gap:12px;">
+        <div class="form-row-2col">
           <div class="form-group">
             <label class="form-label">TARGET AUDIENCE ROLE</label>
             <input type="text" id="custom-role" class="form-input" placeholder="e.g. Solo SaaS Founder, DevOps Engineer">
@@ -231,7 +232,7 @@
           </div>
         </div>
 
-        <div style="display:grid; grid-template-columns: 1fr 1fr; gap:12px;">
+        <div class="form-row-2col">
           <div class="form-group">
             <label class="form-label">FINANCIAL LOSS / MONTH (USD)</label>
             <input type="number" id="custom-usd" class="form-input" placeholder="e.g. 350">
