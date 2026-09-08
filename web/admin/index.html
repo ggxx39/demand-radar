@@ -1,0 +1,220 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Demand Radar // Admin Control Center</title>
+  <link rel="stylesheet" href="admin.css">
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><circle cx=%2250%22 cy=%2250%22 r=%2244%22 fill=%22none%22 stroke=%22%230a84ff%22 stroke-width=%228%22/><circle cx=%2250%22 cy=%2250%22 r=%2214%22 fill=%22%230a84ff%22/></svg>">
+</head>
+<body>
+  <div class="admin-layout">
+    <!-- Sidebar (macOS Settings Style) -->
+    <aside class="sidebar">
+      <div class="sidebar-brand">
+        <div class="sidebar-brand-icon">DR</div>
+        <div>
+          <div class="sidebar-brand-title">Demand Radar</div>
+          <div style="font-size:11px; color:var(--text-secondary);">System Settings</div>
+        </div>
+        <span class="sidebar-brand-badge">ADMIN</span>
+      </div>
+
+      <nav class="sidebar-nav">
+        <button class="sidebar-item active" data-target="section-llm">
+          <span class="sidebar-item-icon">🤖</span>
+          <span>LLM & Inference</span>
+        </button>
+        <button class="sidebar-item" data-target="section-scanner">
+          <span class="sidebar-item-icon">📡</span>
+          <span>Radar Scanner</span>
+        </button>
+        <button class="sidebar-item" data-target="section-curation">
+          <span class="sidebar-item-icon">🗂</span>
+          <span>Card Curation</span>
+        </button>
+        <button class="sidebar-item" data-target="section-landing">
+          <span class="sidebar-item-icon">🌐</span>
+          <span>Landing Page</span>
+        </button>
+      </nav>
+
+      <div class="sidebar-footer">
+        <a href="/" class="sidebar-footer-link" target="_blank">
+          <span>↗</span> View Public Site
+        </a>
+        <button id="btn-logout" class="apple-btn" style="padding:4px 10px; font-size:11px;">
+          Lock
+        </button>
+      </div>
+    </aside>
+
+    <!-- Main Content -->
+    <main class="main-content">
+      <!-- Section 1: LLM & Inference -->
+      <section id="section-llm" class="settings-section active">
+        <div class="content-header">
+          <h1 class="content-title">LLM & Inference Settings</h1>
+          <p class="content-subtitle">Manage deep learning models and API endpoints used for pain-point extraction and 8-dimensional scoring.</p>
+        </div>
+
+        <div class="section-label">Active Provider</div>
+        <div class="inset-card">
+          <div class="inset-row">
+            <div class="inset-row-info">
+              <span class="inset-row-title">Inference Engine</span>
+              <span class="inset-row-desc">Configured upstream API endpoint for text completion</span>
+            </div>
+            <span class="status-pill success">
+              <span class="status-dot"></span>
+              <span id="label-provider">AMD Radeon (OpenCode Configured)</span>
+            </span>
+          </div>
+          <div class="inset-row">
+            <div class="inset-row-info">
+              <span class="inset-row-title">Base URL</span>
+              <span class="inset-row-desc" id="label-baseurl">https://developer.amd.com.cn/radeon/api/v1</span>
+            </div>
+            <span class="status-pill" style="font-family:var(--font-mono); font-size:11px;">HTTPS Validated</span>
+          </div>
+          <div class="inset-row">
+            <div class="inset-row-info">
+              <span class="inset-row-title">API Authentication</span>
+              <span class="inset-row-desc">Secured on Cloudflare Edge via Pages Secrets (never exposed publicly)</span>
+            </div>
+            <span class="status-pill success" id="label-key-status">Key Configured (rc-am••••)</span>
+          </div>
+        </div>
+
+        <div class="section-label">Model Selection</div>
+        <div class="inset-card">
+          <div class="inset-row">
+            <div class="inset-row-info">
+              <span class="inset-row-title">Default Reasoning Model</span>
+              <span class="inset-row-desc">Model employed for JSON Schema extraction & adversarial scoring</span>
+            </div>
+            <select id="select-active-model" class="apple-select">
+              <option value="DeepSeek-V4-Flash" selected>DeepSeek V4 Flash (Fast, Strict JSON)</option>
+              <option value="Qwen3.8-Flash-Next">Qwen 3.8 Flash Next (High Reasoning Depth)</option>
+              <option value="MiniCPM5-1B">MiniCPM 5 (Edge Lightweight)</option>
+            </select>
+          </div>
+          <div class="inset-row">
+            <div class="inset-row-info">
+              <span class="inset-row-title">Test Live Connection</span>
+              <span class="inset-row-desc">Send a verification ping to the active model and measure round-trip latency</span>
+            </div>
+            <button id="btn-test-llm" class="apple-btn primary">
+              <span>⚡</span> Ping Model
+            </button>
+          </div>
+        </div>
+
+        <div id="llm-test-result" class="terminal-box" style="display:none;"></div>
+      </section>
+
+      <!-- Section 2: Radar Scanner -->
+      <section id="section-scanner" class="settings-section">
+        <div class="content-header">
+          <h1 class="content-title">Radar Community Scanner</h1>
+          <p class="content-subtitle">Execute protected scans against developer and founder communities to discover emerging pain points.</p>
+        </div>
+
+        <div class="section-label">Scan Parameters</div>
+        <div class="inset-card">
+          <div class="inset-row">
+            <div class="inset-row-info">
+              <span class="inset-row-title">Community Target</span>
+              <span class="inset-row-desc">Select community channel to harvest signals from</span>
+            </div>
+            <select id="scan-target" class="apple-select">
+              <option value="r/SaaS">Reddit: r/SaaS (Micro-SaaS & Bootstrapping)</option>
+              <option value="r/SideProject">Reddit: r/SideProject (Indie Builders)</option>
+              <option value="r/webdev">Reddit: r/webdev (Developer Tooling)</option>
+              <option value="r/devops">Reddit: r/devops (Cloud & Infra)</option>
+              <option value="hn:ask">Hacker News: Ask HN (Workflow Friction)</option>
+            </select>
+          </div>
+          <div class="inset-row">
+            <div class="inset-row-info">
+              <span class="inset-row-title">Batch Size</span>
+              <span class="inset-row-desc">Number of recent discussions to evaluate per run</span>
+            </div>
+            <select id="scan-limit" class="apple-select">
+              <option value="3">3 posts (Quick check)</option>
+              <option value="5" selected>5 posts (Recommended)</option>
+              <option value="10">10 posts (Deep scan)</option>
+            </select>
+          </div>
+          <div class="inset-row">
+            <div class="inset-row-info">
+              <span class="inset-row-title">Initiate Live Harvest</span>
+              <span class="inset-row-desc">Protected execution using backend credentials</span>
+            </div>
+            <button id="btn-run-scan" class="apple-btn primary">
+              <span>🚀</span> Start Radar Scan
+            </button>
+          </div>
+        </div>
+
+        <div class="section-label">Live Output Log</div>
+        <div id="scan-terminal" class="terminal-box">Ready for command. Select community and start scan.</div>
+      </section>
+
+      <!-- Section 3: Card Curation -->
+      <section id="section-curation" class="settings-section">
+        <div class="content-header">
+          <h1 class="content-title">Opportunity Curation</h1>
+          <p class="content-subtitle">Control which opportunities appear on the public landing page. Toggle visibility or feature top prospects.</p>
+        </div>
+
+        <div class="section-label">All Discovered Opportunities</div>
+        <div class="inset-card" id="curation-list">
+          <div style="padding:24px; text-align:center; color:var(--text-secondary);">Loading cards...</div>
+        </div>
+      </section>
+
+      <!-- Section 4: Landing Page Settings -->
+      <section id="section-landing" class="settings-section">
+        <div class="content-header">
+          <h1 class="content-title">Landing Page Controls</h1>
+          <p class="content-subtitle">Tune the public presentation of Demand Radar.</p>
+        </div>
+
+        <div class="section-label">Hero Messaging</div>
+        <div class="inset-card">
+          <div class="inset-row">
+            <div class="inset-row-info">
+              <span class="inset-row-title">Main Headline</span>
+              <span class="inset-row-desc">The primary value proposition presented to visitors</span>
+            </div>
+            <input type="text" class="apple-input" style="width:340px;" value="Find what people need before writing code." readonly>
+          </div>
+          <div class="inset-row">
+            <div class="inset-row-info">
+              <span class="inset-row-title">Public Live Scan Button</span>
+              <span class="inset-row-desc">Keep disabled so public visitors cannot consume your LLM API quota</span>
+            </div>
+            <label class="switch">
+              <input type="checkbox" disabled>
+              <span class="slider"></span>
+            </label>
+          </div>
+          <div class="inset-row">
+            <div class="inset-row-info">
+              <span class="inset-row-title">Clean Presentation Mode (Apple Style)</span>
+              <span class="inset-row-desc">Enforce high-whitespace, low-density layout to prevent cognitive overload</span>
+            </div>
+            <label class="switch">
+              <input type="checkbox" checked disabled>
+              <span class="slider"></span>
+            </label>
+          </div>
+        </div>
+      </section>
+    </main>
+  </div>
+
+  <script src="admin.js"></script>
+</body>
+</html>

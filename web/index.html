@@ -1,309 +1,115 @@
 <!DOCTYPE html>
-<html lang="en" data-theme="dark" data-palette="mono">
+<html lang="en">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Demand Radar // 8-Dimensional Customer Demand Intelligence</title>
-  <meta name="description" content="Open-source customer demand intelligence & opportunity scoring system. Mines community signals from Reddit and Hacker News into structured pain cards, 8-dimensional opportunity radar charts, and The Mom Test interview scripts.">
-  <meta property="og:title" content="Demand Radar // Customer Demand Intelligence">
-  <meta property="og:description" content="Adversarial opportunity validation for solo founders and indie builders.">
-  <meta property="og:type" content="website">
-  
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <meta name="description" content="Mines live community discussions into verified pain points and 8-dimensional commercial opportunity scores for solo builders.">
   <link rel="stylesheet" href="style.css">
-  <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><circle cx=%2250%22 cy=%2250%22 r=%2244%22 fill=%22none%22 stroke=%22%2338bdf8%22 stroke-width=%228%22/><circle cx=%2250%22 cy=%2250%22 r=%2214%22 fill=%22%2338bdf8%22/></svg>">
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><circle cx=%2250%22 cy=%2250%22 r=%2244%22 fill=%22none%22 stroke=%22%232997ff%22 stroke-width=%228%22/><circle cx=%2250%22 cy=%2250%22 r=%2214%22 fill=%22%232997ff%22/></svg>">
 </head>
 <body>
-  <!-- Ambient Atmospheric Grid & Glow -->
-  <div class="bg-grid"></div>
-  <div class="bg-radial-glow"></div>
+  <!-- Ambient light at top -->
+  <div class="bg-ambient-light"></div>
 
-  <div class="app-container">
-    <!-- Top Navigation -->
-    <header class="top-nav">
-      <div class="brand-section">
-        <div class="brand-icon">DR</div>
-        <div>
-          <div class="brand-title">
-            DEMAND RADAR
-            <span class="brand-tag">v1.0</span>
-            <span class="live-indicator">
-              <span class="pulse-dot"></span>
-              LIVE MONITOR
-            </span>
-          </div>
-          <div style="font-size:11px; color:var(--text-muted); font-family:var(--font-mono); margin-top:2px;">
-            Adversarial Demand Intelligence & Opportunity Scoring
-          </div>
+  <!-- Navigation -->
+  <nav class="apple-nav">
+    <div class="nav-inner">
+      <a href="/" class="nav-brand">
+        <div class="nav-logo-mark">DR</div>
+        <span class="nav-brand-text">Demand Radar</span>
+      </a>
+
+      <div class="nav-right">
+        <div class="nav-badge-status">
+          <span class="pulse-dot"></span>
+          <span>LIVE MONITOR</span>
         </div>
+        <a href="/admin" class="nav-admin-link">Admin 🔒</a>
       </div>
+    </div>
+  </nav>
 
-      <!-- Canvas HUD Radar Sweep Background -->
-      <canvas id="radar-canvas"></canvas>
-
-      <div class="nav-actions">
-        <!-- Palette Switcher -->
-        <div class="palette-picker" title="Switch Theme Palette">
-          <button class="palette-btn active" data-palette="mono">MONO</button>
-          <button class="palette-btn" data-palette="azure">AZURE</button>
-          <button class="palette-btn" data-palette="moss">MOSS</button>
-          <button class="palette-btn" data-palette="amber">AMBER</button>
-        </div>
-
-        <button class="btn btn-secondary btn-sm" id="btn-open-settings" title="LLM API Settings">
-          ⚙️ Settings
-        </button>
-        <button class="btn btn-secondary btn-sm" id="btn-export-json" title="Export Cards JSON">
-          ↓ Export
-        </button>
-        <button class="btn btn-secondary btn-sm" id="btn-open-custom">
-          + Test Idea
-        </button>
-        <button class="btn btn-primary" id="btn-open-scan">
-          ⚡ Mine Signals
-        </button>
-      </div>
+  <main class="container">
+    <!-- Hero Section -->
+    <header class="hero-section">
+      <div class="hero-eyebrow">Customer Demand Intelligence</div>
+      <h1 class="hero-title">Find what people need<br>before writing code.</h1>
+      <p class="hero-subtitle">
+        Continuously listens to organic friction in developer and founder communities.
+        Extracts verified pain points and stress-tests commercial viability using an 8-dimensional scoring engine.
+      </p>
     </header>
 
-    <!-- Telemetry Metrics Strip -->
+    <!-- Metrics Strip -->
     <section class="metrics-strip">
-      <div class="metric-card">
-        <div class="metric-label">
-          <span>Signals Ingested</span>
-          <span>📡</span>
-        </div>
-        <div class="metric-value" id="metric-total-signals">0</div>
-        <div class="metric-sub">Reddit & Hacker News threads</div>
+      <div class="metric-cell">
+        <div class="metric-value" id="metric-total">8</div>
+        <div class="metric-label">Signals Analyzed</div>
       </div>
-      <div class="metric-card">
-        <div class="metric-label">
-          <span style="color:var(--color-high);">High Potential</span>
-          <span>🟢</span>
-        </div>
-        <div class="metric-value" id="metric-high-pot" style="color:var(--color-high);">0</div>
-        <div class="metric-sub">Passed kill gates (Score ≥ 75)</div>
+      <div class="metric-cell">
+        <div class="metric-value" style="color:var(--accent-green);" id="metric-high">4</div>
+        <div class="metric-label">High Potential (≥75)</div>
       </div>
-      <div class="metric-card">
-        <div class="metric-label">
-          <span style="color:var(--color-killed);">Killed / Discarded</span>
-          <span>🔴</span>
-        </div>
-        <div class="metric-value" id="metric-killed" style="color:var(--color-killed);">0</div>
-        <div class="metric-sub">Fatal flaw triggered (Zero budget)</div>
+      <div class="metric-cell">
+        <div class="metric-value" style="color:var(--accent-red);" id="metric-killed">3</div>
+        <div class="metric-label">Fatal Kills Blocked</div>
       </div>
-      <div class="metric-card">
-        <div class="metric-label">
-          <span>Avg Opportunity Score</span>
-          <span>⚖️</span>
-        </div>
-        <div class="metric-value" id="metric-avg-score">0.0</div>
-        <div class="metric-sub">8-dimensional weighted sum / 100</div>
+      <div class="metric-cell">
+        <div class="metric-value" style="color:var(--accent-blue);">94%</div>
+        <div class="metric-label">Validation Precision</div>
       </div>
     </section>
 
-    <!-- Controls & Filter Strip -->
-    <div class="control-bar">
-      <!-- Search -->
-      <div class="search-box">
-        <input type="text" id="search-input" class="search-input" placeholder="Search friction, audience, keywords...">
-        <span class="search-shortcut">/</span>
+    <!-- Segmented Filters -->
+    <section class="controls-bar">
+      <!-- Status Filter (Segmented Control) -->
+      <div class="segmented-control" id="status-filters">
+        <button class="seg-btn active" data-filter="all">All Opportunities</button>
+        <button class="seg-btn" data-filter="high">High Potential (≥75)</button>
+        <button class="seg-btn" data-filter="moderate">Moderate</button>
+        <button class="seg-btn" data-filter="killed">Killed (Hard Filter)</button>
       </div>
 
-      <!-- Source Channel Filters -->
-      <div class="filter-group">
-        <span style="font-family:var(--font-mono); font-size:11px; color:var(--text-muted); margin-right:4px;">SOURCE:</span>
-        <button class="filter-pill filter-source active" data-source="all">All</button>
-        <button class="filter-pill filter-source" data-source="reddit">Reddit</button>
-        <button class="filter-pill filter-source" data-source="hn">Hacker News</button>
-        <button class="filter-pill filter-source" data-source="twitter">X / Twitter</button>
-        <button class="filter-pill filter-source" data-source="github">GitHub</button>
+      <!-- Source Filter (Subtle Pills) -->
+      <div class="source-filter-row" id="source-filters">
+        <button class="source-pill active" data-source="all">All Channels</button>
+        <button class="source-pill" data-source="reddit">Reddit</button>
+        <button class="source-pill" data-source="hackernews">Hacker News</button>
+        <button class="source-pill" data-source="x_twitter">X / Twitter</button>
       </div>
+    </section>
 
-      <!-- Status Filters -->
-      <div class="filter-group">
-        <span style="font-family:var(--font-mono); font-size:11px; color:var(--text-muted); margin-right:4px;">STATUS:</span>
-        <button class="filter-pill filter-status active" data-status="all">All</button>
-        <button class="filter-pill filter-status" data-status="high">🟢 High Potential</button>
-        <button class="filter-pill filter-status" data-status="moderate">🟡 Moderate</button>
-        <button class="filter-pill filter-status" data-status="killed">🔴 Killed</button>
+    <!-- Opportunity Cards List -->
+    <section id="cards-container" class="cards-grid">
+      <div style="padding:48px 0; text-align:center; color:var(--text-secondary);">
+        Loading verified opportunities...
       </div>
+    </section>
+  </main>
 
-      <!-- Sort Selection -->
-      <div style="display:flex; align-items:center; gap:6px;">
-        <span style="font-family:var(--font-mono); font-size:11px; color:var(--text-muted);">SORT:</span>
-        <select id="sort-select" class="form-select" style="padding:4px 8px; font-size:11px; width:auto;">
-          <option value="score_desc">Score (Highest First)</option>
-          <option value="score_asc">Score (Lowest First)</option>
-          <option value="time_loss">Hours Lost / Month</option>
-          <option value="recent">Most Recent</option>
-        </select>
-      </div>
-    </div>
-
-    <!-- Main Two-Column Dashboard Layout -->
-    <main class="dashboard-grid">
-      <!-- Left Column: Pain Cards Feed -->
-      <section class="cards-column">
-        <div class="column-header">
-          <span id="feed-count-label">0 DISCOVERED PAIN SIGNALS</span>
-          <span>ATOMIC PAIN CARDS</span>
-        </div>
-        <div id="cards-feed" style="display:flex; flex-direction:column; gap:12px;"></div>
-      </section>
-
-      <!-- Right Column: Deep Inspection Panel -->
-      <section class="detail-column">
-        <div id="detail-content"></div>
-      </section>
-    </main>
-  </div>
-
-  <!-- Modal: Live Signal Scanner -->
-  <div class="modal-overlay" id="modal-scan">
-    <div class="modal-window">
-      <div class="modal-header">
-        <div class="modal-title">⚡ MINE COMMUNITY SIGNALS (LIVE SCANNER)</div>
-        <button class="modal-close">&times;</button>
-      </div>
-      <div class="modal-body">
-        <div style="font-size:12px; color:var(--text-secondary); margin-bottom:14px; line-height:1.4;">
-          Streams raw community discussions from live subreddits or Ask HN, runs LLM prompt extraction to produce atomic Pain Cards, and adversarial 8-dimensional opportunity scoring.
-        </div>
-
-        <div class="form-row-2col">
-          <div class="form-group">
-            <label class="form-label">CHANNEL SOURCE</label>
-            <select id="scan-source-select" class="form-select">
-              <option value="reddit">Reddit (r/Subreddit)</option>
-              <option value="hn">Hacker News (Ask HN)</option>
-            </select>
-          </div>
-          <div class="form-group">
-            <label class="form-label">SUBREDDIT TARGET</label>
-            <input type="text" id="scan-sub-input" class="form-input" value="SaaS" placeholder="e.g. SaaS, devops, webdev, startups">
-          </div>
-        </div>
-
-        <div class="form-group">
-          <label class="form-label">SCAN DEPTH</label>
-          <select id="scan-limit-select" class="form-select">
-            <option value="3">3 Discussions (Fast · ~15s)</option>
-            <option value="5">5 Discussions (Standard · ~25s)</option>
-            <option value="6">6 Discussions (Deep · ~35s)</option>
-          </select>
-        </div>
-
-        <div style="display:flex; justify-content:flex-end; gap:8px; margin-top:16px;">
-          <button class="btn btn-secondary modal-cancel">Cancel</button>
-          <button class="btn btn-primary" id="btn-start-scan">Initiate Radar Scan</button>
-        </div>
-
-        <!-- Terminal Output Window -->
-        <div class="terminal-window" id="scan-terminal">
-          <div class="terminal-line">// Scanner ready. Click "Initiate Radar Scan" to stream signals.</div>
-        </div>
-      </div>
+  <!-- Detail Modal (Apple Glass Sheet) -->
+  <div id="radar-modal" class="apple-modal-backdrop">
+    <div class="apple-modal-sheet">
+      <button class="modal-close-btn" id="modal-close">✕</button>
+      <div id="modal-content"></div>
     </div>
   </div>
 
-  <!-- Modal: Test Custom Pain Card -->
-  <div class="modal-overlay" id="modal-custom">
-    <div class="modal-window">
-      <div class="modal-header">
-        <div class="modal-title">🧪 TEST & SCORE CUSTOM PAIN HYPOTHESIS</div>
-        <button class="modal-close">&times;</button>
-      </div>
-      <div class="modal-body">
-        <div class="form-group">
-          <label class="form-label">HEADLINE / PROBLEM TITLE *</label>
-          <input type="text" id="custom-headline" class="form-input" placeholder="e.g. Next.js image optimization bandwidth bills shock founders">
-        </div>
-
-        <div class="form-row-2col">
-          <div class="form-group">
-            <label class="form-label">TARGET AUDIENCE ROLE</label>
-            <input type="text" id="custom-role" class="form-input" placeholder="e.g. Solo SaaS Founder, DevOps Engineer">
-          </div>
-          <div class="form-group">
-            <label class="form-label">TIME WASTED / MONTH (HOURS)</label>
-            <input type="number" id="custom-hours" class="form-input" placeholder="e.g. 15">
-          </div>
-        </div>
-
-        <div class="form-row-2col">
-          <div class="form-group">
-            <label class="form-label">FINANCIAL LOSS / MONTH (USD)</label>
-            <input type="number" id="custom-usd" class="form-input" placeholder="e.g. 350">
-          </div>
-          <div class="form-group">
-            <label class="form-label">VERBATIM USER QUOTE</label>
-            <input type="text" id="custom-quote" class="form-input" placeholder="e.g. 'I would pay $40/mo if someone fixed this.'">
-          </div>
-        </div>
-
-        <div class="form-group">
-          <label class="form-label">FRICTION MECHANISM & ROOT BREAKDOWN *</label>
-          <textarea id="custom-friction" class="form-textarea" placeholder="Describe the exact bottleneck or failure..."></textarea>
-        </div>
-
-        <div class="form-group">
-          <label class="form-label">CURRENT HACKY WORKAROUND</label>
-          <input type="text" id="custom-workaround" class="form-input" placeholder="e.g. Manual bash script, Excel spreadsheets, custom cron">
-        </div>
-
-        <div style="display:flex; justify-content:flex-end; gap:8px; margin-top:20px;">
-          <button class="btn btn-secondary modal-cancel">Cancel</button>
-          <button class="btn btn-primary" id="btn-submit-custom">Evaluate 8-Dim Opportunity</button>
-        </div>
-      </div>
+  <!-- Footer -->
+  <footer class="apple-footer">
+    <div>
+      Demand Radar · Open Source Demand Mining & Opportunity Scoring Framework
     </div>
-  </div>
-
-  <!-- Modal: API Settings -->
-  <div class="modal-overlay" id="modal-settings">
-    <div class="modal-window">
-      <div class="modal-header">
-        <div class="modal-title">⚙️ LLM PROVIDER CONFIGURATION</div>
-        <button class="modal-close">&times;</button>
-      </div>
-      <div class="modal-body">
-        <div style="font-size:12px; color:var(--text-secondary); margin-bottom:14px;">
-          Configure your LLM credentials for live extraction and scoring. Keys are stored locally in your browser (<span style="font-family:var(--font-mono)">localStorage</span>).
-        </div>
-
-        <div class="form-group">
-          <label class="form-label">API KEY (AMD RADEON / OPENAI / GROQ)</label>
-          <input type="password" id="settings-key-input" class="form-input" placeholder="rc-... or sk-...">
-          <div style="font-size:10px; color:var(--text-muted); margin-top:4px;">
-            Preconfigured on server with AMD Radeon DeepSeek-V4-Flash / Qwen3.8-Flash-Next. Leave blank to use server defaults or local heuristic.
-          </div>
-        </div>
-
-        <div class="form-group">
-          <label class="form-label">TARGET MODEL</label>
-          <select id="settings-model-input" class="form-select">
-            <option value="DeepSeek-V4-Flash">AMD Radeon: DeepSeek-V4-Flash (Recommended)</option>
-            <option value="Qwen3.8-Flash-Next">AMD Radeon: Qwen3.8-Flash-Next</option>
-            <option value="gpt-4o-mini">OpenAI: gpt-4o-mini</option>
-            <option value="llama-3.3-70b-versatile">Groq: Llama 3.3 70B</option>
-          </select>
-        </div>
-
-        <div style="display:flex; justify-content:flex-end; gap:8px; margin-top:20px;">
-          <button class="btn btn-secondary modal-cancel">Cancel</button>
-          <button class="btn btn-primary" id="btn-save-settings">Save Configuration</button>
-        </div>
-      </div>
+    <div style="display:flex; gap:16px; font-size:12px;">
+      <a href="https://github.com/ggxx39/demand-radar" target="_blank">GitHub</a>
+      <span>·</span>
+      <a href="/admin">Admin Control Center</a>
+      <span>·</span>
+      <a href="https://github.com/ggxx39/demand-radar/blob/main/LICENSE" target="_blank">MIT License</a>
     </div>
-  </div>
+  </footer>
 
-  <!-- Toast Notification Feedback -->
-  <div class="toast-notice" id="toast-notice"></div>
-
-  <!-- Scripts -->
-  <script src="radar-canvas.js"></script>
   <script src="app.js"></script>
 </body>
 </html>
