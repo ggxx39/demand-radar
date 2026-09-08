@@ -11,17 +11,18 @@
 [![Methodology](https://img.shields.io/badge/Methodology-6--Step_Demand_Loop-purple)](README.md#the-6-step-methodology)
 [![Language: 中文](https://img.shields.io/badge/Language-%E4%B8%AD%E6%96%87-red)](README.zh-CN.md)
 
-[English](README.md) · [简体中文](README.zh-CN.md) · [Live Dashboard](https://demand-radar-8n8.pages.dev) · [JSON Schemas](schemas/) · [Prompts](prompts/) · [Templates](templates/) · [Guides](guides/)
+[English](README.md) · [简体中文](README.zh-CN.md) · [Live Dashboard](https://demand-radar-8qt.pages.dev) · [Admin Portal](https://demand-radar-8qt.pages.dev/admin) · [JSON Schemas](schemas/) · [Prompts](prompts/) · [Templates](templates/) · [Guides](guides/)
 
 </div>
 
 ---
 
-## 🌐 Live Web Dashboard (ThreeUI Aesthetic)
+## 🌐 Live Web Dashboard & Admin Portal
 
-Demand Radar provides a fast, dark-mode single-page application and serverless intelligence platform styled after **ThreeUI** (`https://threeui.com/browse`), deployable for free on Cloudflare Pages:
+Demand Radar provides a clean, Apple-inspired minimalist web dashboard and an isolated serverless admin center, deployed free on Cloudflare Pages:
 
-- **Live URL**: [https://demand-radar-8n8.pages.dev](https://demand-radar-8n8.pages.dev)
+- **Public Dashboard**: [https://demand-radar-8qt.pages.dev](https://demand-radar-8qt.pages.dev)
+- **Admin Control Center**: [https://demand-radar-8qt.pages.dev/admin](https://demand-radar-8qt.pages.dev/admin) (Basic Auth protected)
 - **Features**:
   - 🎨 **ThreeUI Palette Switcher**: Seamless switching between `Mono`, `Azure`, `Moss`, and `Amber` colorways.
   - 📡 **Canvas HUD Radar Sweep**: Ambient background radar scanner displaying live signal blips.

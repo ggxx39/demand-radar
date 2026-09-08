@@ -11,17 +11,18 @@
 [![Methodology](https://img.shields.io/badge/Methodology-6--Step_Demand_Loop-purple)](README.zh-CN.md#二完整-6-步需求闭环方法论)
 [![Language: English](https://img.shields.io/badge/Language-English-blue)](README.md)
 
-[English](README.md) · [简体中文](README.zh-CN.md) · [在线控制台 (Live)](https://demand-radar-8n8.pages.dev) · [JSON Schemas](schemas/) · [LLM 提示词](prompts/) · [实战模板](templates/) · [实战指南](guides/)
+[English](README.md) · [简体中文](README.zh-CN.md) · [在线控制台 (Live)](https://demand-radar-8qt.pages.dev) · [管理后台 (Admin)](https://demand-radar-8qt.pages.dev/admin) · [JSON Schemas](schemas/) · [LLM 提示词](prompts/) · [实战模板](templates/) · [实战指南](guides/)
 
 </div>
 
 ---
 
-## 🌐 在线可视化控制台 (ThreeUI 极客暗黑风)
+## 🌐 在线控制台与管理后台 (Apple 极简风格)
 
-Demand Radar 现已提供开箱即用的前端 Web 应用，参考 **ThreeUI** (`https://threeui.com/browse`) 精致暗黑风格构建，全功能适配 **Cloudflare Pages** 免费托管体系：
+Demand Radar 现已提供开箱即用的前端 Web 应用与安全管理后台，采用 **Apple 极简美学**（低信息密度、大留白、中文本地化），全功能适配 **Cloudflare Pages** 免费托管体系：
 
-- **线上演示地址**: [https://demand-radar-8n8.pages.dev](https://demand-radar-8n8.pages.dev)
+- **公开大盘地址**: [https://demand-radar-8qt.pages.dev](https://demand-radar-8qt.pages.dev)
+- **管理后台地址**: [https://demand-radar-8qt.pages.dev/admin](https://demand-radar-8qt.pages.dev/admin)（HTTP Basic Auth 边缘安全隔离）
 - **核心特性**:
   - 🎨 **ThreeUI 调色盘引擎**：支持 `Mono`（纯黑灰阶）、`Azure`（赛博蓝）、`Moss`（苔藓绿）、`Amber`（琥珀金）无缝实时换肤。
   - 📡 **Canvas HUD 雷达扫描**：顶部动态雷达扫描动画与实时信号脉冲微动效。
