@@ -46,3 +46,8 @@ output/
 
 # Obsidian workspace cache
 .obsidian/workspace*
+
+# Cloudflare Pages / Wrangler
+.wrangler/
+dist/
+

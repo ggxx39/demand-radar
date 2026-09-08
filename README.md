@@ -11,9 +11,32 @@
 [![Methodology](https://img.shields.io/badge/Methodology-6--Step_Demand_Loop-purple)](README.md#the-6-step-methodology)
 [![Language: 中文](https://img.shields.io/badge/Language-%E4%B8%AD%E6%96%87-red)](README.zh-CN.md)
 
-[English](README.md) · [简体中文](README.zh-CN.md) · [JSON Schemas](schemas/) · [Prompts](prompts/) · [Templates](templates/) · [Guides](guides/)
+[English](README.md) · [简体中文](README.zh-CN.md) · [Live Dashboard](https://demand-radar-8n8.pages.dev) · [JSON Schemas](schemas/) · [Prompts](prompts/) · [Templates](templates/) · [Guides](guides/)
 
 </div>
+
+---
+
+## 🌐 Live Web Dashboard (ThreeUI Aesthetic)
+
+Demand Radar provides a fast, dark-mode single-page application and serverless intelligence platform styled after **ThreeUI** (`https://threeui.com/browse`), deployable for free on Cloudflare Pages:
+
+- **Live URL**: [https://demand-radar-8n8.pages.dev](https://demand-radar-8n8.pages.dev)
+- **Features**:
+  - 🎨 **ThreeUI Palette Switcher**: Seamless switching between `Mono`, `Azure`, `Moss`, and `Amber` colorways.
+  - 📡 **Canvas HUD Radar Sweep**: Ambient background radar scanner displaying live signal blips.
+  - 🕸️ **8-Dimensional Opportunity Radar**: Interactive SVG polygon measuring Pain Intensity, Frequency, Workaround Friction, Paying Intent, Recurrence, Competitive Gap, Solo Feasibility, and Distribution Accessibility.
+  - 🔴 **Adversarial Hard Kill Gates**: Instant breakdown of fatal flaws for rejected ideas (e.g. Paying Intent < 5, Pain Intensity < 6).
+  - 💬 **The Mom Test Interview Script & DM Outreaches**: Automated 5-stage customer discovery scripts + 1-click Reddit/GitHub cold outreach copy.
+  - ⚡ **Live Signal Scanner**: Real-time signal mining from Reddit (`r/SaaS`, `r/webdev`, `r/devops`) and Hacker News (`Ask HN`) with LLM integration (AMD Radeon DeepSeek-V4-Flash / Qwen3.8-Flash or OpenAI) and built-in heuristic classifiers.
+
+```bash
+# Run local dev server with Cloudflare Pages Functions
+npm run dev
+
+# Deploy to Cloudflare Pages
+npm run deploy
+```
 
 ---
 

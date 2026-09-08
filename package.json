@@ -6,7 +6,9 @@
   "scripts": {
     "test": "node scripts/validate.js",
     "validate": "node scripts/validate.js",
-    "scan": "node scripts/radar.js"
+    "scan": "node scripts/radar.js",
+    "dev": "wrangler pages dev web",
+    "deploy": "wrangler pages deploy web --project-name demand-radar"
   },
   "keywords": [
     "indie-hacker",

@@ -11,9 +11,32 @@
 [![Methodology](https://img.shields.io/badge/Methodology-6--Step_Demand_Loop-purple)](README.zh-CN.md#二完整-6-步需求闭环方法论)
 [![Language: English](https://img.shields.io/badge/Language-English-blue)](README.md)
 
-[English](README.md) · [简体中文](README.zh-CN.md) · [JSON Schemas](schemas/) · [LLM 提示词](prompts/) · [实战模板](templates/) · [实战指南](guides/)
+[English](README.md) · [简体中文](README.zh-CN.md) · [在线控制台 (Live)](https://demand-radar-8n8.pages.dev) · [JSON Schemas](schemas/) · [LLM 提示词](prompts/) · [实战模板](templates/) · [实战指南](guides/)
 
 </div>
+
+---
+
+## 🌐 在线可视化控制台 (ThreeUI 极客暗黑风)
+
+Demand Radar 现已提供开箱即用的前端 Web 应用，参考 **ThreeUI** (`https://threeui.com/browse`) 精致暗黑风格构建，全功能适配 **Cloudflare Pages** 免费托管体系：
+
+- **线上演示地址**: [https://demand-radar-8n8.pages.dev](https://demand-radar-8n8.pages.dev)
+- **核心特性**:
+  - 🎨 **ThreeUI 调色盘引擎**：支持 `Mono`（纯黑灰阶）、`Azure`（赛博蓝）、`Moss`（苔藓绿）、`Amber`（琥珀金）无缝实时换肤。
+  - 📡 **Canvas HUD 雷达扫描**：顶部动态雷达扫描动画与实时信号脉冲微动效。
+  - 🕸️ **8 维机会雷达图**：高精度 SVG 动态雷达多边形，涵盖痛点烈度、发生频次、绕路成本、付费意愿、跨源复现、竞品缝隙、单人交付性与冷启动获客 8 大维度。
+  - 🔴 **一票否决淘汰机制 (Hard Kill Gates)**：对伪需求（付费意愿 < 5、痛点烈度 < 6 等）实时标红淘汰并直击死因。
+  - 💬 **妈妈测试 (The Mom Test) 访谈脚本与一键话术**：自动生成 5 阶段无偏见访谈提纲与 Reddit/GitHub 冷启动私信模版。
+  - ⚡ **实时信号挖掘器 (Live Scanner)**：基于 Cloudflare Pages Functions 抓取 Reddit 与 Hacker News 实时帖子，结合 AMD Radeon DeepSeek-V4-Flash / Qwen3.8-Flash 或内置启发式分类器自动化挖掘痛点。
+
+```bash
+# 本地运行带 Functions 的全栈开发服务
+npm run dev
+
+# 一键部署至 Cloudflare Pages 免费版
+npm run deploy
+```
 
 ---
 
